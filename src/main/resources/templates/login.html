@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" th:href="@{/css/global.css}" href="/css/global.css" />
+    <link rel="stylesheet" th:href="@{/css/header.css}" href="/css/header.css" />
+    <link rel="stylesheet" th:href="@{/css/login.css}" href="/css/login.css" />
+</head>
+<body>
+<div class="container">
+    <div class="content">
+        <p th:if="${logout != null}">You have been logged out</p>
+        <p th:if="${error != null}">Wrong user or password, please try again</p>
+        <p th:if="${loggedin != null}">You are already logged in! <a href="/logout">Logout</a> first!</p>
+        <div th:if="${logout == null and loggedin == null}">
+            <h1>Please Login</h1>
+            <form name="form" th:action="@{/login}" action="/login" method="POST">
+                <fieldset>
+                    <input type="text" name="username" value="" placeholder="Username"/>
+                    <input type="password" name="password" placeholder="Password"/>
+                </fieldset>
+                <input type="submit" id="login" value="Login"/>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Welcome to WebChat</title>
+    <meta charset="UTF-8" />
+    <link href="/css/register.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <header>
+        <span th:text="#{register.greeting}">Welcome to WebChat v0.1</span>
+    </header>
+
+    <h1>Please sign up or go directly to the chat!</h1>
+
+    <div id="formContainer">
+        <form id="signUpForm" action="#" th:object="${account}" method="post" th:action="@{/register.html}">
+            <div>
+                <label for="firstName" th:text="#{register.form.firstName}">First Name:</label>
+                <input id="firstName" type="text" th:field="*{firstName}" required="required" />
+            </div>
+
+            <div>
+                <label for="lastName" th:text="#{register.form.lastName}">Last Name:</label>
+                <input id="lastName" type="text" th:field="*{lastName}" required="required" />
+            </div>
+
+            <div>
+                <label for="email" th:text="#{register.form.email}">E-Mail:</label>
+                <input id="email" type="email" th:field="*{email}" required="required" />
+            </div>
+
+            <div>
+                <label for="username" th:text="#{register.form.username}">User Name:</label>
+                <input id="username" type="text" th:field="*{username}" required="required"/>
+            </div>
+
+            <div>
+                <label for="password" th:text="#{register.form.password}">Password:</label>
+                <input id="password" type="password" th:field="*{password}" pattern=".{3,32}" required="required"/>
+            </div>
+
+            <button type="submit" th:text="#{register.form.signUp}">Sign Up</button>
+    </form>
+    </div>
+</body>
+</html>
