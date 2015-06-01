@@ -1,13 +1,25 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <title>An Error has occurred!</title>
+    <link rel="stylesheet" th:href="@{/css/global.css}" href="/css/global.css"/>
+    <link rel="stylesheet" th:href="@{/css/header.css}" href="/css/header.css"/>
+    <link rel="stylesheet" th:href="@{/css/error.css}" href="/css/error.css"/>
 </head>
 <body>
-<h1>Ooooops...</h1>
-<p th:text="'Error: ' + ${error}"></p>
-<p th:text="'Status: ' + ${status}"></p>
-<p th:text="'Message: ' + ${message}"></p>
+<div th:replace="fragments/header :: #top-state"></div>
+<div id="container">
+    <h1>Ooooops...</h1>
+
+    <div th:if="${param.reason == null}">
+        <p th:text="'Error: ' + ${error}"></p>
+        <p th:text="'Status: ' + ${status}"></p>
+        <p th:text="'Message: ' + ${message}"></p>
+    </div>
+    <div th:if="${param.reason != null}">
+        <p th:if="${param.reason[0] == 'chat_open'}" th:text="'Only one chat window allowed!'"></p>
+    </div>
+</div>
 </body>
 </html>

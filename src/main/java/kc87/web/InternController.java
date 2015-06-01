@@ -8,11 +8,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 @RequestMapping(value = "/intern")
-public class InternController {
+public class InternController
+{
    private static final Logger LOG = LogManager.getLogger(InternController.class);
 
-   @RequestMapping(value = {"","dashboard"}, method = RequestMethod.GET)
-   public String dashboard() {
+   @RequestMapping(value = {"", "dashboard"}, method = RequestMethod.GET)
+   public String dashboard()
+   {
       return "dashboard";
    }
 }

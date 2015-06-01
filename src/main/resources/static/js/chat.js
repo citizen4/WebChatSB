@@ -4,12 +4,12 @@ Chat = (function (window)
    var $ = function (e) {
       return document.getElementById(e);
    };
+
    var doc = document;
    var theHost = location.host;
    var contextPath = location.pathname.slice(0, location.pathname.lastIndexOf("/"));
    var wsScheme = location.protocol == "https:" ? "wss:" : "ws:";
    var connected = false;
-   var loggedIn = false;
    var socket = null;
    var keepAliveTimer = null;
    var msgCounter = 0;
@@ -17,7 +17,6 @@ Chat = (function (window)
 
    function init()
    {
-      //$("accountBtn").onclick = accountHandler;
       $("sendBtn").onclick = sendMsgHandler;
       $("chatInput").onkeypress = sendMsgHandler;
       connect(wsScheme + "//" + theHost + contextPath + "/ws");
@@ -42,15 +41,22 @@ Chat = (function (window)
       }
    }
 
-   function disconnect(active)
+   function disconnect(active, reason)
    {
+      console.log("WS: disconnect with reason: " + reason);
       connected = false;
-      loggedIn = false;
 
-      $("accountBtn").value = "Login";
-      $("loginInput").style.display = "";
-      $("loginGreeting").style.display = "none";
-      $("passwordInput").value = "";
+      if(reason == "SESSION_DESTROYED") {
+         window.location = "/login?expired";
+         return;
+      }
+
+      if(reason == "ALREADY_OPEN") {
+         window.location = "/error?reason=chat_open";
+         return;
+      }
+
+
       $("chatMsgBox").innerHTML = "";
       $("userListBox").innerHTML = "";
       $("statsOutput").style.color = "#666";
@@ -65,41 +71,9 @@ Chat = (function (window)
       socket = null;
    }
 
-   function sendLogin()
-   {
-      var wsMsg = {};
-      var loginMsg = {};
-      wsMsg.TYPE = "ACCOUNT";
-      wsMsg.SUBTYPE = "LOGIN";
-      loginMsg.USER = $("usernameInput").value;
-      loginMsg.PASSWD = $("passwordInput").value;
-      wsMsg.LOGIN_MSG = loginMsg;
-      socket.send(JSON.stringify(wsMsg));
-   }
-
-   function sendLogout()
-   {
-      var wsMsg = {};
-      wsMsg.TYPE = "ACCOUNT";
-      wsMsg.SUBTYPE = "LOGOUT";
-      socket.send(JSON.stringify(wsMsg));
-   }
-
-   function accountHandler()
-   {
-      if (!connected) {
-         loggedIn = false;
-         connect(wsScheme + "//" + theHost + contextPath + "/ws");
-      } else {
-         if (loggedIn) {
-            sendLogout();
-         }
-      }
-   }
-
    function sendMsgHandler(evt)
    {
-      if (!connected || !loggedIn) {
+      if (!connected) {
          showInfo("Log in first, Stranger!")
          return;
       }
@@ -126,7 +100,9 @@ Chat = (function (window)
    {
       console.log("WS: " + state[this.readyState]);
       connected = true;
-      //sendLogin();
+      var joinMsg = {};
+      joinMsg.TYPE = "JOIN";
+      socket.send(JSON.stringify(joinMsg));
    }
 
    function onMessage(message)
@@ -146,7 +122,7 @@ Chat = (function (window)
       console.log("WS: Disconnected clean: " + msg.wasClean);
       console.log("WS: Code: " + msg.code);
       console.log("WS: " + state[this.readyState]);
-      disconnect(false);
+      disconnect(false, msg.reason);
    }
 
 
@@ -156,41 +132,37 @@ Chat = (function (window)
       console.log("WS: Disconnected clean: " + msg.wasClean);
       console.log("WS: Code: " + msg.code);
       console.log("WS: " + state[this.readyState]);
-      disconnect(false);
+      disconnect(false, msg.reason);
    }
 
    function parseMsg(msg)
    {
-      if (msg.TYPE == "ACCOUNT") {
+      if(msg.TYPE == "LOGOUT") {
+         console.log("WS: Got LOGOUT from server");
+         return;
+      }
 
-         if (msg.SUBTYPE == "LOGIN" && msg.RESULT_MSG.CODE == "OK") {
-            loggedIn = true;
+      if (msg.TYPE == "JOIN") {
+         $("statsOutput").style.color = "#0f0";
+         $("statsOutput").textContent = "\u2022 " + msg.STATS_MSG;
 
-            $("accountBtn").value = "Logout";
-            $("loginInput").style.display = "none";
-            $("loginGreeting").textContent = "Hi, " + msg.LOGIN_MSG.USER + "! ";
-            $("loginGreeting").style.display = "";
-            $("statsOutput").style.color = "#0f0";
-            $("statsOutput").textContent = "\u2022 " + msg.STATS_MSG;
-
-            if (msg.USER_LIST) {
-               showUserList(msg.USER_LIST);
-            }
-
-            // Works only the first time dude!
-            if ($("doLoginStranger")) {
-               $("doLoginStranger").style.display = "none";
-            }
-
-            keepAliveTimer = setInterval(function ()
-            {
-               var wsMsg = {};
-               wsMsg.TYPE = "PING";
-               socket.send(JSON.stringify(wsMsg));
-            }, 49 * 1000);
+         if (msg.USER_LIST) {
+            showUserList(msg.USER_LIST);
          }
 
-         showLoginInfo(msg.RESULT_MSG.MSG, (msg.RESULT_MSG.CODE == "OK") ? "#2f2" : "#f44");
+         // Works only the first time dude!
+         if ($("doLoginStranger")) {
+            $("doLoginStranger").style.display = "none";
+         }
+
+         keepAliveTimer = setInterval(function ()
+         {
+            var wsMsg = {};
+            wsMsg.TYPE = "PING";
+            socket.send(JSON.stringify(wsMsg));
+         }, 49 * 1000);
+
+         showLoginInfo("Join successful!", "#2f2");
 
          return;
       }
@@ -244,7 +216,8 @@ Chat = (function (window)
    }
 
 
-   function showUserList(userList) {
+   function showUserList(userList)
+   {
       $("userListBox").innerHTML = "";
 
       for (var i = 0; i < userList.length; i++) {

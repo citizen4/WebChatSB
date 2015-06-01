@@ -3,25 +3,29 @@ package kc87.util;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
-public class PasswordCrypto {
+public class CustomPasswordEncoder implements PasswordEncoder
+{
 
-   private static final Logger LOG = LogManager.getLogger(PasswordCrypto.class);
+   private static final Logger LOG = LogManager.getLogger(CustomPasswordEncoder.class);
    private static final String HASH_ALGO = "SHA-256";
    private static final int SALT_SIZE = 4;
 
 
-   public static boolean isPasswordCorrect(final String password, final String hash) {
+   public static boolean isPasswordCorrect(final String password, final String hash)
+   {
       LOG.debug("PW:" + password + " hash:" + hash);
       String salt = hash.split(":")[1];
       return hashString(password + salt).equals(hash.split(":")[0]);
    }
 
-   public static String encryptPassword(final String password) {
+   public static String encryptPassword(final String password)
+   {
       String result;
       Random rnd = new Random();
       StringBuilder saltStringBuilder = new StringBuilder();
@@ -38,7 +42,8 @@ public class PasswordCrypto {
    }
 
 
-   private static String hashString(final String str) {
+   private static String hashString(final String str)
+   {
       MessageDigest md;
 
       try {
@@ -52,13 +57,22 @@ public class PasswordCrypto {
       byte[] dataBytes = md.digest();
 
       StringBuilder sb = new StringBuilder();
-      for(byte b : dataBytes) {
+      for (byte b : dataBytes) {
          sb.append(Integer.toString((b & 0xff), 16));
       }
 
       return sb.toString();
    }
 
-   private PasswordCrypto() {
+   @Override
+   public String encode(CharSequence rawPassword)
+   {
+      return CustomPasswordEncoder.encryptPassword(rawPassword.toString());
+   }
+
+   @Override
+   public boolean matches(CharSequence rawPassword, String encodedPassword)
+   {
+      return CustomPasswordEncoder.isPasswordCorrect(rawPassword.toString(), encodedPassword);
    }
 }

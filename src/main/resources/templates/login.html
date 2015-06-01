@@ -1,28 +1,39 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <title>Login</title>
-    <link rel="stylesheet" th:href="@{/css/global.css}" href="/css/global.css" />
-    <link rel="stylesheet" th:href="@{/css/header.css}" href="/css/header.css" />
-    <link rel="stylesheet" th:href="@{/css/login.css}" href="/css/login.css" />
+    <link rel="stylesheet" th:href="@{/css/global.css}" href="/css/global.css"/>
+    <link rel="stylesheet" th:href="@{/css/header.css}" href="/css/header.css"/>
+    <link rel="stylesheet" th:href="@{/css/login.css}" href="/css/login.css"/>
 </head>
 <body>
-<div class="container">
-    <div class="content">
-        <p th:if="${logout != null}">You have been logged out</p>
-        <p th:if="${error != null}">Wrong user or password, please try again</p>
-        <p th:if="${loggedin != null}">You are already logged in! <a href="/logout">Logout</a> first!</p>
-        <div th:if="${logout == null and loggedin == null}">
-            <h1>Please Login</h1>
-            <form name="form" th:action="@{/login}" action="/login" method="POST">
-                <fieldset>
-                    <input type="text" name="username" value="" placeholder="Username"/>
-                    <input type="password" name="password" placeholder="Password"/>
-                </fieldset>
-                <input type="submit" id="login" value="Login"/>
-            </form>
+
+<div th:replace="fragments/header :: #top-state"></div>
+
+<p class="InfoMsg" th:if="${param.logout != null}">You have been successfully logged out!</p>
+<p class="InfoMsg" th:if="${param.expired != null}">You have been logged out because your session expired!</p>
+
+<p class="InfoMsg" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')">You are already logged in!
+    <a href="/logout">Logout</a> first!
+</p>
+
+<div id="formContainer" sec:authorize="hasRole('ROLE_ANONYMOUS')">
+    <h1>Please Login</h1>
+    <p class="ErrorMsg" th:if="${param.error != null}">Wrong user or password !!</p>
+    <form id="loginForm" name="form" th:action="@{/login}" action="/login" method="POST">
+        <div>
+            <label for="username">Username:</label>
+            <input id="username" name="username" type="text" value="" required="required"/>
         </div>
-    </div>
+
+        <div>
+            <label for="password">Password:</label>
+            <input id="password" name="password" type="password" pattern=".{3,32}" required="required"/>
+        </div>
+        <button type="submit" id="login">Login</button>
+    </form>
 </div>
+
 </body>
 </html>

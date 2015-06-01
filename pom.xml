@@ -17,7 +17,8 @@
         <jetty.version>9.3.0.M2</jetty.version>
         <spring-boot.version>1.2.3.RELEASE</spring-boot.version>
         <spring.version>4.1.6.RELEASE</spring.version>
-        <spring-security.version>4.0.1.RELEASE</spring-security.version>
+        <!--<spring-security.version>4.0.1.RELEASE</spring-security.version>-->
+        <spring-security.version>3.2.7.RELEASE</spring-security.version>
         <thymeleaf.version>2.1.4.RELEASE</thymeleaf.version>
         <hibernate.version>4.3.9.Final</hibernate.version>
         <hibernate-entitymanager.version>${hibernate.version}</hibernate-entitymanager.version>
@@ -85,15 +86,15 @@
 
         <!-- Spring Security -->
         <dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-config</artifactId>
-			<version>${spring-security.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-web</artifactId>
-			<version>${spring-security.version}</version>
-		</dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>${spring-security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>${spring-security.version}</version>
+        </dependency>
 
         <!--
         <dependency>
@@ -154,12 +155,18 @@
             <version>${jetty.version}</version>
         </dependency>
 
-        <!--Thymeleaf -->
+        <!--Thymeleaf (and Spring Security Dialect) -->
         <dependency>
             <groupId>org.thymeleaf</groupId>
             <artifactId>thymeleaf-spring4</artifactId>
             <version>${thymeleaf.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity3</artifactId>
+            <version>2.1.2.RELEASE</version>
+        </dependency>
+
 
         <!-- Gson -->
         <dependency>

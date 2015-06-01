@@ -3,16 +3,15 @@
 <head>
     <title>Welcome to WebChat</title>
     <meta charset="UTF-8" />
-    <link href="/css/register.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" th:href="@{/css/global.css}" href="/css/global.css"/>
+    <link rel="stylesheet" th:href="@{/css/header.css}" href="/css/header.css"/>
+    <link rel="stylesheet" th:href="@{/css/register.css}" href="/css/register.css"/>
 </head>
 <body>
-    <header>
-        <span th:text="#{register.greeting}">Welcome to WebChat v0.1</span>
-    </header>
-
-    <h1>Please sign up or go directly to the chat!</h1>
+    <div th:replace="fragments/header :: #top-state"></div>
 
     <div id="formContainer">
+        <h1>Please Sign Up</h1>
         <form id="signUpForm" action="#" th:object="${account}" method="post" th:action="@{/register.html}">
             <div>
                 <label for="firstName" th:text="#{register.form.firstName}">First Name:</label>

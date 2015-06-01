@@ -1,0 +1,13 @@
+#container h1 {
+    color: #fff;
+    font-size: 44px;
+    font-weight: bold;
+    text-align: center;
+}
+
+#container p {
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+}
