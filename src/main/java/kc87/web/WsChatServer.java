@@ -37,8 +37,7 @@ import java.util.function.BiConsumer;
 
 @ServerEndpoint(value = "/ws", configurator = WsChatServer.Config.class)
 @SuppressWarnings("unused")
-public class WsChatServer implements ApplicationContextAware
-{
+public class WsChatServer implements ApplicationContextAware {
    private static final Logger LOG = LogManager.getLogger(WsChatServer.class);
    private static final int IDLE_TIMEOUT_SEC = 60;
    private static final int WS_SESSION_TIMEOUT_SEC = 100;
@@ -59,15 +58,13 @@ public class WsChatServer implements ApplicationContextAware
    private String httpSessionId = null;
 
    @PostConstruct
-   private void init()
-   {
+   private void init() {
       LOG.debug("@PostConstruct");
       sessionService = appContext.getBean(SessionService.class);
    }
 
    @OnOpen
-   public void onOpen(Session session)
-   {
+   public void onOpen(Session session) {
       LOG.debug("onOpen(): " + session.getId());
       thisSession = session;
 
@@ -91,8 +88,7 @@ public class WsChatServer implements ApplicationContextAware
    }
 
    @OnMessage
-   public void onTextMsg(String jsonStr)
-   {
+   public void onTextMsg(String jsonStr) {
       Gson gson = new GsonBuilder().serializeNulls().create();
 
       try {
@@ -118,8 +114,7 @@ public class WsChatServer implements ApplicationContextAware
    }
 
    @OnClose
-   public void onClose()
-   {
+   public void onClose() {
       LOG.debug("onClose(): " + thisSession.getId());
       if (isHttpSessionValid) {
          httpSession.removeAttribute("CHAT_OPEN");
@@ -129,13 +124,11 @@ public class WsChatServer implements ApplicationContextAware
 
 
    @Override
-   public void setApplicationContext(ApplicationContext ctx) throws BeansException
-   {
+   public void setApplicationContext(ApplicationContext ctx) throws BeansException {
       appContext = ctx;
    }
 
-   private void joinChat()
-   {
+   private void joinChat() {
       String userColor;
 
       sessionService.addOnSessionDestroyedListener(callback);
@@ -181,8 +174,7 @@ public class WsChatServer implements ApplicationContextAware
    }
 
 
-   private void unjoinChat()
-   {
+   private void unjoinChat() {
       if (thisSession.getUserProperties().containsKey("USER")) {
          LOG.debug("unjoinChat(): " + thisSession.getUserProperties().get("USER"));
 
@@ -211,8 +203,7 @@ public class WsChatServer implements ApplicationContextAware
    }
 
 
-   private void handleChat(final Message clientMsg)
-   {
+   private void handleChat(final Message clientMsg) {
       Message broadcastMsg;
 
       if (clientMsg.SUBTYPE.equals("MSG")) {
@@ -231,8 +222,7 @@ public class WsChatServer implements ApplicationContextAware
    }
 
 
-   private void sendPong()
-   {
+   private void sendPong() {
       if (System.currentTimeMillis() - lastActivityTime > WS_SESSION_TIMEOUT_SEC * 1000) {
          httpSession.invalidate();
          return;
@@ -243,8 +233,7 @@ public class WsChatServer implements ApplicationContextAware
    }
 
 
-   private void activeClose(CloseReason reason)
-   {
+   private void activeClose(CloseReason reason) {
       try {
          if (thisSession.isOpen()) {
             LOG.debug("Closing connection to peer: " + thisSession.getId());
@@ -256,8 +245,7 @@ public class WsChatServer implements ApplicationContextAware
    }
 
 
-   private String[] buildUserList(final boolean includeThis)
-   {
+   private String[] buildUserList(final boolean includeThis) {
       List<String> userList = new ArrayList<>();
 
       LOG.debug("buildUserList(): " + thisSession.getOpenSessions().size());
@@ -274,8 +262,7 @@ public class WsChatServer implements ApplicationContextAware
       return (userList.size() == 0) ? null : userList.toArray(new String[userList.size()]);
    }
 
-   private void sendMessage(final Message serverMsg)
-   {
+   private void sendMessage(final Message serverMsg) {
       final Gson gson = new Gson();
 
       try {
@@ -289,8 +276,7 @@ public class WsChatServer implements ApplicationContextAware
       }
    }
 
-   private void broadcastMessage(final Message serverMsg, final boolean includeThis)
-   {
+   private void broadcastMessage(final Message serverMsg, final boolean includeThis) {
       final Gson gson = new Gson();
 
       try {
@@ -307,8 +293,7 @@ public class WsChatServer implements ApplicationContextAware
       }
    }
 
-   private void sessionDestroyed(final String id, final String username)
-   {
+   private void sessionDestroyed(final String id, final String username) {
       LOG.debug("sessionDestroyed(): " + username + "/" + id);
       if (id.equals(httpSessionId)) {
          isHttpSessionValid = false;
@@ -318,11 +303,9 @@ public class WsChatServer implements ApplicationContextAware
    }
 
 
-   public static class Config extends ServerEndpointConfig.Configurator
-   {
+   public static class Config extends ServerEndpointConfig.Configurator {
       @Override
-      public void modifyHandshake(ServerEndpointConfig sec, HandshakeRequest request, HandshakeResponse response)
-      {
+      public void modifyHandshake(ServerEndpointConfig sec, HandshakeRequest request, HandshakeResponse response) {
          super.modifyHandshake(sec, request, response);
          HttpSession httpSession = (HttpSession) request.getHttpSession();
          sec.getUserProperties().put("httpSession", httpSession);

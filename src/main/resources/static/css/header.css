@@ -21,7 +21,7 @@ header form {
 
 #statsOutput {
     position: relative;
-    display: inline-block;
+    display: none;
     padding: 10px;
     color: #666;
     font-size: 20px;

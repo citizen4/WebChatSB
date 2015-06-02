@@ -11,12 +11,13 @@
 }
 
 #formContainer h1 {
-    color: #fff;
+    color: #ff0;
+    margin-top: 16px;
     text-align: center;
 }
 
 #signUpForm {
-    margin: 10px;
+    margin: 5px 10px 10px 10px;
 }
 
 #signUpForm div {
@@ -45,6 +46,14 @@
     padding: 6px;
 }
 
+
+.FormFieldErrMsg {
+    color: #f44;
+    margin-left: 130px;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+}
 
 .ErrMsg {
     position: relative;

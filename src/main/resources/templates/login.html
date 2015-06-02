@@ -12,15 +12,15 @@
 <div th:replace="fragments/header :: #top-state"></div>
 
 <p class="InfoMsg" th:if="${param.logout != null}">You have been successfully logged out!</p>
-<p class="InfoMsg" th:if="${param.expired != null}">You have been logged out because your session expired!</p>
+<p class="InfoMsg" th:if="${param.expired != null}">You have been logged out because your session has expired!</p>
 
 <p class="InfoMsg" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')">You are already logged in!
     <a href="/logout">Logout</a> first!
 </p>
 
-<div id="formContainer" sec:authorize="hasRole('ROLE_ANONYMOUS')">
+<div id="formContainer" sec:authorize="isAnonymous()">
     <h1>Please Login</h1>
-    <p class="ErrorMsg" th:if="${param.error != null}">Wrong user or password !!</p>
+    <p class="ErrorMsg" th:if="${param.error != null}">Wrong username or password!</p>
     <form id="loginForm" name="form" th:action="@{/login}" action="/login" method="POST">
         <div>
             <label for="username">Username:</label>

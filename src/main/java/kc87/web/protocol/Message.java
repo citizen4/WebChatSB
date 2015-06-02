@@ -1,7 +1,6 @@
 package kc87.web.protocol;
 
-public class Message
-{
+public class Message {
    public String TYPE;
    public String SUBTYPE;
    //public ResultMsg RESULT_MSG;

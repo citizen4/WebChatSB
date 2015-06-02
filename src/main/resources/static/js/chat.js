@@ -143,6 +143,7 @@ Chat = (function (window)
       }
 
       if (msg.TYPE == "JOIN") {
+         $("statsOutput").style.display = "inline-block";
          $("statsOutput").style.color = "#0f0";
          $("statsOutput").textContent = "\u2022 " + msg.STATS_MSG;
 

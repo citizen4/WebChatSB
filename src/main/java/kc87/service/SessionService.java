@@ -23,8 +23,7 @@ import java.util.function.BiConsumer;
 
 @Service
 @SuppressWarnings("unused")
-public class SessionService implements ApplicationListener<ApplicationEvent>
-{
+public class SessionService implements ApplicationListener<ApplicationEvent> {
    private static final Logger LOG = LogManager.getLogger(SessionService.class);
    private static List<BiConsumer<String, String>> callbacks = new LinkedList<>();
    private static Map<String, HttpSession> sessionList = new HashMap<>(128);
@@ -34,8 +33,7 @@ public class SessionService implements ApplicationListener<ApplicationEvent>
 
 
    @Override
-   public void onApplicationEvent(ApplicationEvent event)
-   {
+   public void onApplicationEvent(ApplicationEvent event) {
 
       if (event instanceof HttpSessionCreatedEvent) {
          HttpSessionCreatedEvent sessionCreated = (HttpSessionCreatedEvent) event;
@@ -94,13 +92,11 @@ public class SessionService implements ApplicationListener<ApplicationEvent>
    }
 
 
-   public synchronized void addOnSessionDestroyedListener(BiConsumer<String, String> callback)
-   {
+   public synchronized void addOnSessionDestroyedListener(BiConsumer<String, String> callback) {
       callbacks.add(callback);
    }
 
-   public synchronized void removeOnSessionDestroyedListener(BiConsumer<String, String> callback)
-   {
+   public synchronized void removeOnSessionDestroyedListener(BiConsumer<String, String> callback) {
       LOG.debug("removeOnSessionDestroyedListener()");
       callbacks.remove(callback);
    }

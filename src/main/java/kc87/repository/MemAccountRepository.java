@@ -11,8 +11,7 @@ import java.util.List;
 
 @Repository(value = "inMemory")
 @SuppressWarnings("unused")
-public class MemAccountRepository implements AccountRepository
-{
+public class MemAccountRepository implements AccountRepository {
 
    private static final Logger LOG = LogManager.getLogger(MemAccountRepository.class);
    private static final int MAX_ACCOUNTS = 32;
@@ -20,8 +19,7 @@ public class MemAccountRepository implements AccountRepository
    private long nextId = 0;
 
    @Override
-   public Account findByUsername(final String username)
-   {
+   public Account findByUsername(final String username) {
       for (Account account : repository) {
          if (account.getUsername().equalsIgnoreCase(username)) {
             return account;
@@ -31,22 +29,28 @@ public class MemAccountRepository implements AccountRepository
    }
 
    @Override
-   public Account[] findAll()
-   {
+   public Account[] findAll() {
       return repository.toArray(new Account[repository.size()]);
    }
 
    @Override
-   public synchronized void save(Account account)
-   {
-
+   public synchronized void save(Account account) {
       if (nextId > MAX_ACCOUNTS - 1) {
          throw new RuntimeException("Repository is full");
       }
 
-      account.setId(nextId++);
-      repository.add(account);
+      Account newAccount = new Account();
 
-      LOG.debug("Saved: " + account.toString());
+      newAccount.setId(nextId++);
+      newAccount.setFirstName(account.getFirstName());
+      newAccount.setLastName(account.getLastName());
+      newAccount.setEmail(account.getEmail());
+      newAccount.setRoles(account.getRoles());
+      newAccount.setUsername(account.getUsername());
+      newAccount.setPwHash(account.getPwHash());
+
+      repository.add(newAccount);
+
+      LOG.debug("Saved: " + newAccount.toString());
    }
 }

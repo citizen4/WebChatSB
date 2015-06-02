@@ -26,15 +26,13 @@ import java.util.EnumSet;
 
 @Configuration
 @EnableWebSecurity
-public class AppConfig extends WebMvcConfigurerAdapter
-{
+public class AppConfig extends WebMvcConfigurerAdapter {
 
    private static final Logger LOG = LogManager.getLogger(AppConfig.class);
 
 
    @Bean
-   public EmbeddedServletContainerFactory servletContainer()
-   {
+   public EmbeddedServletContainerFactory servletContainer() {
       JettyEmbeddedServletContainerFactory factory = new JettyEmbeddedServletContainerFactory();
 
       //factory.setSessionTimeout(60, TimeUnit.SECONDS);
@@ -65,27 +63,23 @@ public class AppConfig extends WebMvcConfigurerAdapter
 
 
    @Bean
-   public WsChatServer wsChatServer()
-   {
+   public WsChatServer wsChatServer() {
       return new WsChatServer();
    }
 
    @Bean
-   public ServerEndpointExporter serverEndpointExporter()
-   {
+   public ServerEndpointExporter serverEndpointExporter() {
       return new ServerEndpointExporter();
    }
 
    @Bean
-   public ServletListenerRegistrationBean httpSessionEventPublisher()
-   {
+   public ServletListenerRegistrationBean httpSessionEventPublisher() {
       return new ServletListenerRegistrationBean(new HttpSessionEventPublisher());
    }
 
 
    @Override
-   public void addViewControllers(ViewControllerRegistry registry)
-   {
+   public void addViewControllers(ViewControllerRegistry registry) {
       registry.addViewController("/login").setViewName("login");
       registry.addViewController("/chat").setViewName("chat");
    }

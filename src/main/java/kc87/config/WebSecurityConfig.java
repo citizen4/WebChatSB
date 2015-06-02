@@ -29,22 +29,20 @@ import java.util.List;
 
 
 @Configuration
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter
-{
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
    private static final Logger LOG = LogManager.getLogger(WebSecurityConfig.class);
 
    @Autowired
    AccountService accountService;
 
    @Override
-   public void configure(WebSecurity security)
-   {
-      security.ignoring().antMatchers("/css/**", "/js/**", "/img/**");
+   public void configure(WebSecurity security) {
+      // Speed up access of static content
+      security.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico");
    }
 
    @Override
-   protected void configure(HttpSecurity http) throws Exception
-   {
+   protected void configure(HttpSecurity http) throws Exception {
       http.sessionManagement()
               .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
               .sessionFixation()
@@ -64,38 +62,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
               .invalidateHttpSession(true);
       http.httpBasic().disable();
       http.csrf().disable();
+      http.authorizeRequests().antMatchers("/").permitAll();
+      http.authorizeRequests().antMatchers("/index.*").permitAll();
       http.authorizeRequests().antMatchers("/intern/**").hasRole("ADMIN");
       http.authorizeRequests().antMatchers("/chat").hasRole("USER");
-      http.authorizeRequests().antMatchers("/login").hasRole("ANONYMOUS");
-      http.authorizeRequests().antMatchers("/register").hasRole("ANONYMOUS");
+      http.authorizeRequests().antMatchers("/login").anonymous();
+      http.authorizeRequests().antMatchers("/register").anonymous();
+      //http.authorizeRequests().anyRequest().fullyAuthenticated();
       http.authorizeRequests().anyRequest().permitAll();
    }
 
    @Override
-   public void configure(AuthenticationManagerBuilder auth) throws Exception
-   {
-      //auth.userDetailsService(inMemoryUserDetailsManager());
-      auth.userDetailsService(accountService)
-              .passwordEncoder(new CustomPasswordEncoder());
+   public void configure(AuthenticationManagerBuilder auth) throws Exception {
+      auth.userDetailsService(accountService).passwordEncoder(new CustomPasswordEncoder());
    }
 
-   @Bean
-   public InMemoryUserDetailsManager inMemoryUserDetailsManager()
-   {
-      UserDetails user;
-      GrantedAuthority userAuthority = new SimpleGrantedAuthority("ROLE_USER");
-      GrantedAuthority adminAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
-      List<UserDetails> users = new ArrayList<>();
-      user = new User("admin", "master", Arrays.asList(userAuthority, adminAuthority));
-      users.add(user);
-      user = new User("luke", "12345678", Collections.singletonList(userAuthority));
-      users.add(user);
-      return new InMemoryUserDetailsManager(users);
-   }
 
    @Bean
-   public SessionRegistry sessionRegistry()
-   {
+   public SessionRegistry sessionRegistry() {
       return new SessionRegistryImpl();
    }
 }
