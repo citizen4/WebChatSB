@@ -298,7 +298,14 @@ public class WsChatServer implements ApplicationContextAware {
       if (id.equals(httpSessionId)) {
          isHttpSessionValid = false;
          unjoinChat();
-         activeClose(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "SESSION_DESTROYED"));
+         new Thread(() -> {
+            try {
+               Thread.sleep(100);
+            } catch (InterruptedException e) {
+               /* IGNORED*/
+            }
+            activeClose(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "SESSION_DESTROYED"));
+         }).start();
       }
    }
 

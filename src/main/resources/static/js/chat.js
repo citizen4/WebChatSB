@@ -74,7 +74,7 @@ Chat = (function (window)
    function sendMsgHandler(evt)
    {
       if (!connected) {
-         showInfo("Log in first, Stranger!")
+         showInfo("Log in first, Stranger!");
          return;
       }
 

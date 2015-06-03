@@ -7,15 +7,18 @@ import org.eclipse.jetty.server.ConnectionFactory;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.ServerConnector;
+import org.hibernate.validator.HibernateValidator;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
 import org.springframework.boot.context.embedded.ServletListenerRegistrationBean;
 import org.springframework.boot.context.embedded.jetty.JettyEmbeddedServletContainerFactory;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
@@ -26,9 +29,9 @@ import java.util.EnumSet;
 
 @Configuration
 @EnableWebSecurity
-public class AppConfig extends WebMvcConfigurerAdapter {
+public class WebAppConfig extends WebMvcConfigurerAdapter {
 
-   private static final Logger LOG = LogManager.getLogger(AppConfig.class);
+   private static final Logger LOG = LogManager.getLogger(WebAppConfig.class);
 
 
    @Bean
@@ -77,6 +80,28 @@ public class AppConfig extends WebMvcConfigurerAdapter {
       return new ServletListenerRegistrationBean(new HttpSessionEventPublisher());
    }
 
+
+   @Bean
+   public MessageSource messageSource() {
+      ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+      messageSource.setBasename("classpath:i18n/messages");
+      messageSource.setCacheSeconds(1);
+      messageSource.setDefaultEncoding("UTF-8");
+      return messageSource;
+   }
+
+   @Bean
+   public LocalValidatorFactoryBean validator() {
+      LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
+      bean.setProviderClass(HibernateValidator.class);
+      bean.setValidationMessageSource(messageSource());
+      return bean;
+   }
+
+   @Override
+   public Validator getValidator() {
+      return validator();
+   }
 
    @Override
    public void addViewControllers(ViewControllerRegistry registry) {

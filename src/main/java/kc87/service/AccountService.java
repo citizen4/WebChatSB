@@ -30,6 +30,26 @@ public class AccountService implements UserDetailsService {
    @Qualifier("inMemory")
    private AccountRepository accountRepository;
 
+   @Override
+   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+      Account account = accountRepository.findByUsername(username);
+
+      if (account != null) {
+         List<GrantedAuthority> authorities = new ArrayList<>();
+         for (String role : account.getRoles().split(",")) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
+         }
+         return new User(account.getUsername(), account.getPwHash(), authorities);
+      } else {
+         throw new UsernameNotFoundException("User does not exist!");
+      }
+   }
+
+
+   public Account[] allAccounts() {
+      return accountRepository.findAll();
+   }
+
    public Account checkAccount(final String username, final String password) {
 
       Account account = accountRepository.findByUsername(username);
@@ -48,7 +68,7 @@ public class AccountService implements UserDetailsService {
       return null;
    }
 
-   public boolean createAccount(final Account account) {
+   public void createAccount(final Account account) {
       LOG.debug("Create account for: {}", account.getUsername());
       if (accountRepository.findByUsername(account.getUsername()) == null) {
          account.setPwHash(CustomPasswordEncoder.encryptPassword(account.getPassword()));
@@ -57,10 +77,9 @@ public class AccountService implements UserDetailsService {
             account.setRoles("USER");
          }
          accountRepository.save(account);
-         return true;
       } else {
          LOG.debug("User '{}' is already registered!", account.getUsername());
-         return false;
+         throw new UsernameAlreadyTakenException(account.getUsername());
       }
    }
 
@@ -95,19 +114,10 @@ public class AccountService implements UserDetailsService {
       createAccount(testAccount);
    }
 
-
-   @Override
-   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-      Account account = accountRepository.findByUsername(username);
-
-      if (account != null) {
-         List<GrantedAuthority> authorities = new ArrayList<>();
-         for (String role : account.getRoles().split(",")) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
-         }
-         return new User(account.getUsername(), account.getPwHash(), authorities);
-      } else {
-         throw new UsernameNotFoundException("User does not exist!");
+   public static class UsernameAlreadyTakenException extends RuntimeException {
+      public UsernameAlreadyTakenException(final String username){
+         super("Username '"+username+"' already taken!");
       }
    }
+
 }

@@ -13,35 +13,23 @@
 <div id="formContainer">
     <h1>Please Sign Up</h1>
 
-    <form id="signUpForm" action="#" th:object="${account}" method="post" th:action="@{/register.html}">
-
-        <!--
-        <div th:if="${#fields.hasGlobalErrors()}">
-            <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">...</p>
-        </div>
-        -->
-
-        <!--
-        <div th:if="${#fields.hasAnyErrors()}">
-            <p th:each="err : ${#fields.allErrors()}" th:text="${err}">...</p>
-        </div>
-        -->
+    <form id="signUpForm" action="#" th:object="${account}" method="post" th:action="@{/register}">
 
         <div>
             <p class="FormFieldErrMsg"  th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></p>
-            <label for="firstName" th:text="#{register.form.firstName}">First Name:</label>
+            <label for="firstName" th:text="#{register.form.firstName}">First:</label>
             <input id="firstName" type="text" th:field="*{firstName}" required="required"/>
         </div>
 
         <div>
             <p class="FormFieldErrMsg"  th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></p>
-            <label for="lastName" th:text="#{register.form.lastName}">Last Name:</label>
+            <label for="lastName" th:text="#{register.form.lastName}">Last:</label>
             <input id="lastName" type="text" th:field="*{lastName}" required="required"/>
         </div>
 
         <div>
             <p class="FormFieldErrMsg"  th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
-            <label for="email" th:text="#{register.form.email}">E-Mail:</label>
+            <label for="email" th:text="#{register.form.email}">EMail:</label>
             <input id="email" type="text" th:field="*{email}" required="required"/>
         </div>
 

@@ -19,16 +19,16 @@
 </p>
 
 <div id="formContainer" sec:authorize="isAnonymous()">
-    <h1>Please Login</h1>
-    <p class="ErrorMsg" th:if="${param.error != null}">Wrong username or password!</p>
+    <h1 th:text="#{login.greeting}"></h1>
+    <p class="ErrorMsg" th:if="${param.error != null}" th:text="#{error.wrong_credentials}">Error!</p>
     <form id="loginForm" name="form" th:action="@{/login}" action="/login" method="POST">
         <div>
-            <label for="username">Username:</label>
+            <label for="username" th:text="#{login.form.username}">Username:</label>
             <input id="username" name="username" type="text" value="" required="required"/>
         </div>
 
         <div>
-            <label for="password">Password:</label>
+            <label for="password" th:text="#{login.form.password}">Password:</label>
             <input id="password" name="password" type="password" pattern=".{3,32}" required="required"/>
         </div>
         <button type="submit" id="login">Login</button>

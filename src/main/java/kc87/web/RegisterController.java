@@ -33,16 +33,14 @@ public class RegisterController {
 
    @RequestMapping(method = RequestMethod.POST)
    public String handleSubmit(@Valid Account account, Errors errors) {
-
-      LOG.debug("Errors: " + errors.toString());
-
       if (!errors.hasErrors()) {
-         if(accountService.createAccount(account)) {
+         try {
+            accountService.createAccount(account);
+            // After successful registration, login the user automatically
             autoLogin(account);
             return "redirect:chat";
-         }else{
-            errors.rejectValue("username",null,"This username is already taken!");
-            LOG.debug("Errors: " + errors.toString());
+         } catch (AccountService.UsernameAlreadyTakenException e) {
+            errors.rejectValue("username", "error.username_taken", "Username error!");
          }
       }
       return "register";

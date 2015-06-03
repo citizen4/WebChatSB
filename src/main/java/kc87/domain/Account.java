@@ -23,7 +23,7 @@ public class Account implements Serializable {
    private String lastName;
 
    @NotNull
-   @Email(message = "Not a valid email address!")
+   @Email(message = "{error.email_invalid}")
    private String email;
 
    @NotNull
