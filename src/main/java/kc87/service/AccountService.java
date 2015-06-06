@@ -17,6 +17,10 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.PersistenceUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +33,7 @@ public class AccountService implements UserDetailsService {
    @Autowired
    @Qualifier("inMemory")
    private AccountRepository accountRepository;
+
 
    @Override
    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -44,7 +49,6 @@ public class AccountService implements UserDetailsService {
          throw new UsernameNotFoundException("User does not exist!");
       }
    }
-
 
    public Account[] allAccounts() {
       return accountRepository.findAll();

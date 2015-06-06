@@ -2,12 +2,20 @@ package kc87.domain;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.SafeHtml;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.beans.Transient;
 import java.io.Serializable;
 
-
+@Entity
+@Table(name = "account_tbl")
 @SuppressWarnings("unused")
 public class Account implements Serializable {
    private Long id;
@@ -39,6 +47,9 @@ public class Account implements Serializable {
    private String roles;
 
 
+   @Id
+   @GeneratedValue(strategy = GenerationType.AUTO)
+   @Column(name = "ID")
    public Long getId() {
       return id;
    }
@@ -47,6 +58,7 @@ public class Account implements Serializable {
       this.id = id;
    }
 
+   @Column(name = "FIRST_NAME")
    public String getFirstName() {
       return firstName;
    }
@@ -55,6 +67,7 @@ public class Account implements Serializable {
       this.firstName = firstName;
    }
 
+   @Column(name = "LAST_NAME")
    public String getLastName() {
       return lastName;
    }
@@ -63,6 +76,7 @@ public class Account implements Serializable {
       this.lastName = lastName;
    }
 
+   @Column(name = "EMAIL")
    public String getEmail() {
       return email;
    }
@@ -71,6 +85,7 @@ public class Account implements Serializable {
       this.email = email;
    }
 
+   @Column(name = "USERNAME")
    public String getUsername() {
       return username;
    }
@@ -88,6 +103,7 @@ public class Account implements Serializable {
       this.password = password;
    }
 
+   @Column(name = "PW_HASH")
    public String getPwHash() {
       return pwHash;
    }
@@ -96,6 +112,7 @@ public class Account implements Serializable {
       this.pwHash = pwHash;
    }
 
+   @Column(name = "ROLES")
    public String getRoles() {
       return roles;
    }

@@ -19,6 +19,7 @@
         <spring.version>4.1.6.RELEASE</spring.version>
         <!--<spring-security.version>4.0.1.RELEASE</spring-security.version>-->
         <spring-security.version>3.2.7.RELEASE</spring-security.version>
+        <spring-data-jpa.version>1.8.0.RELEASE</spring-data-jpa.version>
         <thymeleaf.version>2.1.4.RELEASE</thymeleaf.version>
         <hibernate.version>4.3.9.Final</hibernate.version>
         <hibernate-entitymanager.version>${hibernate.version}</hibernate-entitymanager.version>
@@ -95,25 +96,51 @@
             <artifactId>spring-security-web</artifactId>
             <version>${spring-security.version}</version>
         </dependency>
-
         <!--
         <dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
+            <version>2.0.7.RELEASE</version>
+        </dependency>
+        -->
 
+        <!-- Persistence -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>${hibernate.version}</version>
+            <exclusions>
+				<exclusion>
+					<groupId>org.jboss.spec.javax.transaction</groupId>
+					<artifactId>jboss-transaction-api_1.2_spec</artifactId>
+				</exclusion>
+			</exclusions>
+        </dependency>
+         <dependency>
+			<groupId>javax.transaction</groupId>
+			<artifactId>javax.transaction-api</artifactId>
+            <version>1.2</version>
+		</dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jpa</artifactId>
-			<version>${spring.version}</version>
+			<version>${spring-data-jpa.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aspects</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-        -->
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>${hsqldb.version}</version>
+        </dependency>
 
         <!-- Validator -->
         <dependency>
