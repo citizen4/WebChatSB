@@ -47,7 +47,7 @@ public class MemAccountRepository implements AccountRepository {
       newAccount.setEmail(account.getEmail());
       newAccount.setRoles(account.getRoles());
       newAccount.setUsername(account.getUsername());
-      newAccount.setPwHash(account.getPwHash());
+      newAccount.setPassword(account.getPassword());
 
       repository.add(newAccount);
 

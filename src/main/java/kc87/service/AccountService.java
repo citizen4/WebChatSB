@@ -14,15 +14,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceUnit;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -31,7 +25,7 @@ public class AccountService implements UserDetailsService {
    private static final Logger LOG = LogManager.getLogger(AccountService.class);
 
    @Autowired
-   @Qualifier("inMemory")
+   @Qualifier("default"/*"inMemory"*/)
    private AccountRepository accountRepository;
 
 
@@ -44,7 +38,7 @@ public class AccountService implements UserDetailsService {
          for (String role : account.getRoles().split(",")) {
             authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
          }
-         return new User(account.getUsername(), account.getPwHash(), authorities);
+         return new User(account.getUsername(), account.getPassword(), authorities);
       } else {
          throw new UsernameNotFoundException("User does not exist!");
       }
@@ -59,7 +53,7 @@ public class AccountService implements UserDetailsService {
       Account account = accountRepository.findByUsername(username);
 
       if (account != null) {
-         if (CustomPasswordEncoder.isPasswordCorrect(password, account.getPwHash())) {
+         if (CustomPasswordEncoder.isPasswordCorrect(password, account.getPassword())) {
             LOG.debug("Username and password are correct!");
             return account;
          } else {
@@ -72,19 +66,18 @@ public class AccountService implements UserDetailsService {
       return null;
    }
 
-   public void createAccount(final Account account) {
+   public void createAccount(final Account account, final String password) {
       LOG.debug("Create account for: {}", account.getUsername());
-      if (accountRepository.findByUsername(account.getUsername()) == null) {
-         account.setPwHash(CustomPasswordEncoder.encryptPassword(account.getPassword()));
-         //account.setPassword(null);
-         if (account.getRoles() == null) {
-            account.setRoles("USER");
+         if (accountRepository.findByUsername(account.getUsername()) == null) {
+            account.setPassword(CustomPasswordEncoder.encryptPassword(password));
+            if (account.getRoles() == null) {
+               account.setRoles("USER");
+            }
+            accountRepository.save(account);
+         } else {
+            LOG.debug("User '{}' is already registered!", account.getUsername());
+            throw new UsernameAlreadyTakenException(account.getUsername());
          }
-         accountRepository.save(account);
-      } else {
-         LOG.debug("User '{}' is already registered!", account.getUsername());
-         throw new UsernameAlreadyTakenException(account.getUsername());
-      }
    }
 
    @PostConstruct
@@ -105,17 +98,26 @@ public class AccountService implements UserDetailsService {
       testAccount.setLastName("Skywalker");
       testAccount.setEmail("luke.skywalker@jedi.org");
       testAccount.setUsername("luke");
-      testAccount.setPassword("12345678");
+      //testAccount.setPassword("12345678");
       testAccount.setRoles("USER");
-      createAccount(testAccount);
+      try {
+         createAccount(testAccount,"12345678");
+      }catch (UsernameAlreadyTakenException e) {
+         LOG.debug("Account already created");
+      }
+
       // A test administrator
       testAccount.setFirstName("Ben");
       testAccount.setLastName("Kenobi");
       testAccount.setEmail("ben.kenobi@jedi.org");
       testAccount.setUsername("admin");
-      testAccount.setPassword("master");
+      //testAccount.setPassword("master");
       testAccount.setRoles("USER,ADMIN");
-      createAccount(testAccount);
+      try {
+         createAccount(testAccount,"master");
+      }catch (UsernameAlreadyTakenException e) {
+         LOG.debug("Account already created");
+      }
    }
 
    public static class UsernameAlreadyTakenException extends RuntimeException {

@@ -1,7 +1,9 @@
 package kc87.domain;
 
+import kc87.web.RegisterFormValidationGroup;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.SafeHtml;
+import org.springframework.data.annotation.AccessType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,14 +13,14 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.beans.Transient;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "account_tbl")
+@AccessType(AccessType.Type.PROPERTY)
 @SuppressWarnings("unused")
 public class Account implements Serializable {
-   private Long id;
+   private long id;
 
    @NotNull
    @SafeHtml(message = "No weired content please!")
@@ -39,26 +41,23 @@ public class Account implements Serializable {
    @Size(min = 2, max = 16, message = "Wrong size! (min: 2, max: 16)")
    private String username;
 
-   @NotNull
-   @Size(min = 6, max = 32, message = "Wrong size! (min: 6, max: 32)")
+   @NotNull(groups = RegisterFormValidationGroup.class)
+   @Size(min = 6, max = 32, message = "Wrong size! (min: 6, max: 32)", groups = RegisterFormValidationGroup.class)
    private String password;
 
-   private String pwHash;
    private String roles;
 
 
-   @Id
-   @GeneratedValue(strategy = GenerationType.AUTO)
-   @Column(name = "ID")
-   public Long getId() {
+   @Id @GeneratedValue(strategy = GenerationType.AUTO)
+   public long getId() {
       return id;
    }
 
-   public void setId(Long id) {
+   public void setId(long id) {
       this.id = id;
    }
 
-   @Column(name = "FIRST_NAME")
+   @Column(name = "first_name")
    public String getFirstName() {
       return firstName;
    }
@@ -67,7 +66,7 @@ public class Account implements Serializable {
       this.firstName = firstName;
    }
 
-   @Column(name = "LAST_NAME")
+   @Column(name = "last_name")
    public String getLastName() {
       return lastName;
    }
@@ -76,7 +75,6 @@ public class Account implements Serializable {
       this.lastName = lastName;
    }
 
-   @Column(name = "EMAIL")
    public String getEmail() {
       return email;
    }
@@ -85,7 +83,6 @@ public class Account implements Serializable {
       this.email = email;
    }
 
-   @Column(name = "USERNAME")
    public String getUsername() {
       return username;
    }
@@ -94,7 +91,7 @@ public class Account implements Serializable {
       this.username = username;
    }
 
-   @Transient
+   @Column(name = "encoded_password")
    public String getPassword() {
       return password;
    }
@@ -103,16 +100,6 @@ public class Account implements Serializable {
       this.password = password;
    }
 
-   @Column(name = "PW_HASH")
-   public String getPwHash() {
-      return pwHash;
-   }
-
-   public void setPwHash(String pwHash) {
-      this.pwHash = pwHash;
-   }
-
-   @Column(name = "ROLES")
    public String getRoles() {
       return roles;
    }
@@ -131,7 +118,6 @@ public class Account implements Serializable {
               ", username='" + username + '\'' +
               ", roles='" + roles + '\'' +
               ", password='" + password + '\'' +
-              ", pwHash='" + pwHash + '\'' +
               '}';
    }
 }

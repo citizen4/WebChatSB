@@ -12,10 +12,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import javax.validation.Valid;
+import javax.validation.groups.Default;
 
 @Controller
 @RequestMapping(value = "/register")
@@ -32,10 +32,13 @@ public class RegisterController {
    }
 
    @RequestMapping(method = RequestMethod.POST)
-   public String handleSubmit(@Valid Account account, Errors errors) {
+   public String handleSubmit(@Validated(value = {Default.class,RegisterFormValidationGroup.class})
+                                 Account account, Errors errors) {
       if (!errors.hasErrors()) {
          try {
-            accountService.createAccount(account);
+            final String password = account.getPassword();
+            account.setPassword(null);
+            accountService.createAccount(account, password);
             // After successful registration, login the user automatically
             autoLogin(account);
             return "redirect:chat";

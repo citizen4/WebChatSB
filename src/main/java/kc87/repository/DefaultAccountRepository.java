@@ -1,40 +1,43 @@
 package kc87.repository;
 
-
 import kc87.domain.Account;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceUnit;
+import javax.persistence.PersistenceContext;
+import java.util.List;
 
 @Repository(value = "default")
 @SuppressWarnings("unused")
 public class DefaultAccountRepository implements AccountRepository {
    private static final Logger LOG = LogManager.getLogger(DefaultAccountRepository.class);
 
-   @PersistenceUnit
-   private EntityManagerFactory entityManagerFactory;
-
+   @PersistenceContext
+   private EntityManager entityManager;
 
    @Override
-   public Account findByUsername(String username) {
-      return null;
+   public Account findByUsername(final String username) {
+      List<Account> resultList;
+
+      resultList = entityManager.createQuery("SELECT a FROM Account a WHERE LOWER(a.username) = :username", Account.class)
+               .setParameter("username", username.toLowerCase())
+               .getResultList();
+
+      return (resultList.size() == 0) ? null : resultList.get(0);
    }
 
    @Override
    public Account[] findAll() {
-      return new Account[0];
+      List<Account> result;
+      result = entityManager.createQuery("SELECT a FROM Account a" , Account.class).getResultList();
+      return result.toArray(new Account[result.size()]);
    }
 
    @Override
-   public void save(Account account) {
-
+   @Transactional
+   public void save(final Account account) {
       Account newAccount = new Account();
 
       newAccount.setFirstName(account.getFirstName());
@@ -42,16 +45,8 @@ public class DefaultAccountRepository implements AccountRepository {
       newAccount.setEmail(account.getEmail());
       newAccount.setRoles(account.getRoles());
       newAccount.setUsername(account.getUsername());
-      newAccount.setPwHash(account.getPwHash());
+      newAccount.setPassword(account.getPassword());
 
-      EntityManager entityManager = entityManagerFactory.createEntityManager();
-      EntityTransaction transaction = entityManager.getTransaction();
-
-      transaction.begin();
       entityManager.persist(newAccount);
-      transaction.commit();
-      entityManager.close();
    }
-
-
 }
