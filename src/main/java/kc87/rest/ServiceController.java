@@ -7,16 +7,17 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.ServletWebRequest;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/service")
@@ -28,10 +29,11 @@ public class ServiceController {
    @Autowired
    AccountService accountService;
 
-   @RequestMapping(value = "/accounts", method = RequestMethod.GET)
+   @RequestMapping(value = "/accounts", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
    public Account[] accounts(Authentication authentication) {
       checkPermissions(authentication);
-      return accountService.allAccounts();
+      List<Account> accounts = accountService.allAccounts();
+      return accounts.toArray(new Account[accounts.size()]);
    }
 
    private void checkPermissions(final Authentication authentication) {
@@ -52,10 +54,10 @@ public class ServiceController {
 
       switch (exception.getCode()) {
          case UNAUTHORIZED:
-            responseEntity = new ResponseEntity<Object>(HttpStatus.UNAUTHORIZED);
+            responseEntity = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             break;
          default:
-            responseEntity = new ResponseEntity<Object>(HttpStatus.INTERNAL_SERVER_ERROR);
+            responseEntity = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             break;
       }
 
@@ -69,7 +71,7 @@ public class ServiceController {
 
       public RestException(final HttpStatus code, final String message) {
          super(message);
-         this.code = code;;
+         this.code = code;
       }
 
       public HttpStatus getCode() {

@@ -1,0 +1,21 @@
+[{
+  "_class": "kc87.domain.Account",
+  "id":null,
+  "firstName":"Luke",
+  "lastName":"Skywalker",
+  "email":"luke.skywalker@jedi.org",
+  "username":"admin",
+  "password":"a3a3d2c75c7d0712c2df563b3ec9276c3c3d147dd7328c51b04cebf784b1:1d1be541",
+  "roles":"USER,ADMIN"
+},
+{
+  "_class": "kc87.domain.Account",
+  "id":null,
+  "firstName":"Lea",
+  "lastName":"Skywalker",
+  "email":"lea.skywalker@jedi.org",
+  "username":"lea",
+  "password":"a3a3d2c75c7d0712c2df563b3ec9276c3c3d147dd7328c51b04cebf784b1:1d1be541",
+  "roles":"USER"
+}]
+

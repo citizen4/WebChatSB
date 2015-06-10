@@ -1,53 +1,38 @@
-package kc87.domain;
+package kc87.web;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.data.annotation.AccessType;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.SafeHtml;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
+import javax.validation.constraints.Size;
 
-@Entity
-@Table(name = "account_tbl")
-@AccessType(AccessType.Type.PROPERTY)
+
 @SuppressWarnings("unused")
-public class Account implements Serializable {
-   private Long id;
+public class RegisterFormBean {
 
    @NotNull
+   @SafeHtml(message = "No weired content please!")
+   @Size(min = 2, max = 32, message = "Wrong size! (min: 2, max: 32)")
    private String firstName;
 
    @NotNull
+   @SafeHtml(message = "No weired content please!")
+   @Size(min = 2, max = 32, message = "Wrong size! (min: 2, max: 32)")
    private String lastName;
 
    @NotNull
+   @Email(message = "{error.email_invalid}")
    private String email;
 
    @NotNull
+   @SafeHtml(message = "No weired content please!")
+   @Size(min = 2, max = 16, message = "Wrong size! (min: 2, max: 16)")
    private String username;
 
    @NotNull
+   @Size(min = 6, max = 32, message = "Wrong size! (min: 6, max: 32)")
    private String password;
 
-   private String roles;
 
-
-   @Id @GeneratedValue(strategy = GenerationType.AUTO)
-   public Long getId() {
-      return id;
-   }
-
-   public void setId(Long id) {
-      this.id = id;
-   }
-
-   @Column(name = "first_name")
    public String getFirstName() {
       return firstName;
    }
@@ -56,7 +41,6 @@ public class Account implements Serializable {
       this.firstName = firstName;
    }
 
-   @Column(name = "last_name")
    public String getLastName() {
       return lastName;
    }
@@ -81,34 +65,21 @@ public class Account implements Serializable {
       this.username = username;
    }
 
-   @Column(name = "hashed_password")
-   @JsonIgnore // Exclude hash on JSON serialization
    public String getPassword() {
       return password;
    }
 
-   @JsonProperty // Include hash on JSON deserialization
    public void setPassword(String password) {
       this.password = password;
    }
 
-   public String getRoles() {
-      return roles;
-   }
-
-   public void setRoles(String roles) {
-      this.roles = roles;
-   }
-
    @Override
    public String toString() {
-      return "Account{" +
-              "id=" + id +
-              ", firstName='" + firstName + '\'' +
+      return "RegisterFormBean{" +
+              "firstName='" + firstName + '\'' +
               ", lastName='" + lastName + '\'' +
               ", email='" + email + '\'' +
               ", username='" + username + '\'' +
-              ", roles='" + roles + '\'' +
               ", password='" + password + '\'' +
               '}';
    }

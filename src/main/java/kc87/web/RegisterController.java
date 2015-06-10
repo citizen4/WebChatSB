@@ -1,7 +1,7 @@
 package kc87.web;
 
-import kc87.domain.Account;
 import kc87.service.AccountService;
+import kc87.service.DefaultAccountService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +10,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import javax.validation.groups.Default;
+import org.springframework.web.servlet.ModelAndView;
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping(value = "/register")
@@ -26,32 +25,31 @@ public class RegisterController {
    AccountService accountService;
 
    @RequestMapping(method = RequestMethod.GET)
-   public String form(final Model model) {
-      model.addAttribute("account", new Account());
-      return "register";
+   public ModelAndView form(final ModelAndView modelView) {
+      modelView.setViewName("register");
+      modelView.addObject(new RegisterFormBean());
+      return modelView;
    }
 
    @RequestMapping(method = RequestMethod.POST)
-   public String handleSubmit(@Validated(value = {Default.class,RegisterFormValidationGroup.class})
-                                 Account account, Errors errors) {
-      if (!errors.hasErrors()) {
+   public String handleSubmit(@Valid RegisterFormBean formBean, BindingResult result) {
+      if (!result.hasErrors()) {
+         LOG.debug(formBean.toString());
          try {
-            final String password = account.getPassword();
-            account.setPassword(null);
-            accountService.createAccount(account, password);
+            accountService.createAccount(formBean);
             // After successful registration, login the user automatically
-            autoLogin(account);
+            autoLogin(formBean.getUsername());
             return "redirect:chat";
-         } catch (AccountService.UsernameAlreadyTakenException e) {
-            errors.rejectValue("username", "error.username_taken", "Username error!");
+         } catch (DefaultAccountService.UsernameAlreadyTakenException e) {
+            result.rejectValue("username", "error.username_taken", "Username error!");
          }
       }
       return "register";
    }
 
-   private void autoLogin(final Account account) {
+   private void autoLogin(final String username) {
       try {
-         UserDetails user = accountService.loadUserByUsername(account.getUsername());
+         UserDetails user = accountService.loadUserByUsername(username);
          Authentication authToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
          SecurityContextHolder.getContext().setAuthentication(authToken);
       } catch (Exception e) {

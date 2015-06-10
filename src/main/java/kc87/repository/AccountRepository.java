@@ -1,13 +1,9 @@
 package kc87.repository;
 
-
 import kc87.domain.Account;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AccountRepository {
-
-   Account findByUsername(String username);
-
-   Account[] findAll();
-
-   void save(Account account);
+@SuppressWarnings("unused")
+public interface AccountRepository extends JpaRepository<Account, Long> {
+   Account findByUsernameIgnoreCase(String username);
 }

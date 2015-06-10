@@ -13,14 +13,19 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.web.DefaultRedirectStrategy;
+import org.springframework.security.web.RedirectStrategy;
 
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
    private static final Logger LOG = LogManager.getLogger(WebSecurityConfig.class);
+   private static final GrantedAuthority ADMIN_AUTHORITY = new SimpleGrantedAuthority("ROLE_ADMIN");
 
    @Autowired
    AccountService accountService;
@@ -43,7 +48,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       http.formLogin()
               .loginPage("/login")
               .failureUrl("/login?error")
-              .defaultSuccessUrl("/chat");
+              .successHandler((request, response, authentication) -> {
+                 String successUrl = "/chat";
+                 RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+                 if(authentication.getAuthorities().contains(ADMIN_AUTHORITY)) {
+                    successUrl = "/service/accounts";
+                 }
+                 redirectStrategy.sendRedirect(request,response,successUrl);
+              });
+              //.defaultSuccessUrl("/chat");
       http.logout()
               .logoutUrl("/logout")
               .logoutSuccessUrl("/login?logout")

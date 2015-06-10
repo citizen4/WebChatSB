@@ -13,7 +13,7 @@
 <div id="formContainer">
     <h1>Please Sign Up</h1>
 
-    <form id="signUpForm" action="#" th:object="${account}" method="post" th:action="@{/register}">
+    <form id="signUpForm" action="#" th:object="${registerFormBean}" method="post" th:action="@{/register}">
 
         <div>
             <p class="FormFieldErrMsg"  th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></p>

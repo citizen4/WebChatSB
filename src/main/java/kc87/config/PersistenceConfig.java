@@ -2,16 +2,14 @@ package kc87.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import kc87.domain.Account;
 import org.hibernate.jpa.HibernatePersistenceProvider;
-import org.springframework.boot.autoconfigure.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.repository.init.Jackson2RepositoryPopulatorFactoryBean;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.ValidationMode;
 import javax.sql.DataSource;
@@ -19,16 +17,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-@EnableTransactionManagement
+@EnableJpaRepositories(basePackages = "kc87.repository", enableDefaultTransactions = true)
 @SuppressWarnings("unused")
 public class PersistenceConfig {
-
-   @Bean
-   public PlatformTransactionManager transactionManager() {
-      JpaTransactionManager transactionManager = new JpaTransactionManager();
-      transactionManager.setDataSource(dataSource());
-		return transactionManager;
-	}
 
    @Bean
    public DataSource dataSource() {
@@ -57,9 +48,17 @@ public class PersistenceConfig {
       factoryBean.setDataSource(dataSource());
       factoryBean.setPackagesToScan("kc87.domain");
       factoryBean.setJpaPropertyMap(jpaProperties);
-      //factoryBean.setValidationMode(ValidationMode.NONE);
+      factoryBean.setValidationMode(ValidationMode.NONE);
 
       return factoryBean;
    }
 
+   /*
+   @Bean
+   public Jackson2RepositoryPopulatorFactoryBean repositoryPopulator() {
+      Jackson2RepositoryPopulatorFactoryBean factoryBean = new Jackson2RepositoryPopulatorFactoryBean();
+      Resource sourceData = new ClassPathResource("db/accounts.json");
+      factoryBean.setResources(new Resource[] { sourceData });
+      return factoryBean;
+   }*/
 }
