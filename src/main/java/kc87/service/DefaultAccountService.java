@@ -1,8 +1,8 @@
 package kc87.service;
 
 import kc87.domain.Account;
-import kc87.repository.AccountRepository;
-import kc87.util.CustomPasswordEncoder;
+import kc87.repository.jpa.AccountRepository;
+import kc87.util.SimplePasswordEncoder;
 import kc87.web.RegisterFormBean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -62,7 +62,7 @@ public class DefaultAccountService implements AccountService {
          newAccount.setEmail(account.getEmail());
          newAccount.setUsername(account.getUsername());
          newAccount.setPassword(password == null ? account.getPassword() :
-               CustomPasswordEncoder.encryptPassword(password));
+               SimplePasswordEncoder.encryptPassword(password));
          newAccount.setRoles(account.getRoles() == null ? "USER" : account.getRoles());
          accountRepository.save(newAccount);
       } else {

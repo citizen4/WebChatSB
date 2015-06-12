@@ -1,4 +1,4 @@
-package kc87.repository;
+package kc87.repository.jpa;
 
 import kc87.domain.Account;
 import org.springframework.data.jpa.repository.JpaRepository;

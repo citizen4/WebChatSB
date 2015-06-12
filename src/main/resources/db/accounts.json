@@ -5,7 +5,7 @@
   "lastName":"Skywalker",
   "email":"luke.skywalker@jedi.org",
   "username":"admin",
-  "password":"a3a3d2c75c7d0712c2df563b3ec9276c3c3d147dd7328c51b04cebf784b1:1d1be541",
+  "password":"93b653f222a7e6614cff691b0a0e3cbee29e518433a28b85ba02f495b39deb8:40537a48",
   "roles":"USER,ADMIN"
 },
 {
@@ -18,4 +18,3 @@
   "password":"a3a3d2c75c7d0712c2df563b3ec9276c3c3d147dd7328c51b04cebf784b1:1d1be541",
   "roles":"USER"
 }]
-

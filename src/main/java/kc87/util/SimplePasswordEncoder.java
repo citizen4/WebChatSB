@@ -9,9 +9,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
-public class CustomPasswordEncoder implements PasswordEncoder {
+public class SimplePasswordEncoder implements PasswordEncoder {
 
-   private static final Logger LOG = LogManager.getLogger(CustomPasswordEncoder.class);
+   private static final Logger LOG = LogManager.getLogger(SimplePasswordEncoder.class);
    private static final String HASH_ALGO = "SHA-256";
    private static final int SALT_SIZE = 4;
 
@@ -62,11 +62,11 @@ public class CustomPasswordEncoder implements PasswordEncoder {
 
    @Override
    public String encode(CharSequence rawPassword) {
-      return CustomPasswordEncoder.encryptPassword(rawPassword.toString());
+      return SimplePasswordEncoder.encryptPassword(rawPassword.toString());
    }
 
    @Override
    public boolean matches(CharSequence rawPassword, String encodedPassword) {
-      return CustomPasswordEncoder.isPasswordCorrect(rawPassword.toString(), encodedPassword);
+      return SimplePasswordEncoder.isPasswordCorrect(rawPassword.toString(), encodedPassword);
    }
 }

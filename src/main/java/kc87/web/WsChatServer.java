@@ -4,6 +4,8 @@ package kc87.web;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import kc87.domain.ChatLog;
+import kc87.repository.mongo.ChatLogRepository;
 import kc87.service.SessionService;
 import kc87.web.protocol.ChatMsg;
 import kc87.web.protocol.Message;
@@ -29,6 +31,7 @@ import javax.websocket.server.ServerEndpointConfig;
 import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -48,6 +51,7 @@ public class WsChatServer implements ApplicationContextAware {
    private static AtomicInteger usersLoggedIn = new AtomicInteger(0);
    private static ApplicationContext appContext = null;
    private static SessionService sessionService = null;
+   private static ChatLogRepository chatLogRepository = null;
    private UsernamePasswordAuthenticationToken authToken = null;
    private Session thisSession = null;
    private HttpSession httpSession = null;
@@ -61,6 +65,7 @@ public class WsChatServer implements ApplicationContextAware {
    private void init() {
       LOG.debug("@PostConstruct");
       sessionService = appContext.getBean(SessionService.class);
+      chatLogRepository = appContext.getBean(ChatLogRepository.class);
    }
 
    @OnOpen
@@ -216,6 +221,18 @@ public class WsChatServer implements ApplicationContextAware {
          chatMsg.MSG = clientMsg.CHAT_MSG.MSG.replace("<", "&lt;").replace("&", "&amp;");
          chatMsg.COLOR = (String) thisSession.getUserProperties().get("COLOR");
          chatMsg.FROM = (String) thisSession.getUserProperties().get("USER");
+
+         ChatLog logMsg = new ChatLog();
+         logMsg.setDate(new Date(lastActivityTime));
+         logMsg.setUser(chatMsg.FROM);
+         logMsg.setMessage(chatMsg.MSG);
+
+         try {
+            chatLogRepository.insert(logMsg);
+         }catch (Exception e) {
+            LOG.error(e.getMessage());
+         }
+
          broadcastMsg.CHAT_MSG = chatMsg;
          broadcastMessage(broadcastMsg, true);
       }

@@ -1,7 +1,7 @@
 package kc87.config;
 
 import kc87.service.AccountService;
-import kc87.util.CustomPasswordEncoder;
+import kc87.util.SimplePasswordEncoder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +74,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
    @Override
    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-      auth.userDetailsService(accountService).passwordEncoder(new CustomPasswordEncoder());
+      auth.userDetailsService(accountService).passwordEncoder(new SimplePasswordEncoder());
    }
 
    @Bean

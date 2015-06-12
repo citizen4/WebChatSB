@@ -5,10 +5,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.data.repository.init.Jackson2RepositoryPopulatorFactoryBean;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 import javax.persistence.ValidationMode;
@@ -17,9 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-@EnableJpaRepositories(basePackages = "kc87.repository", enableDefaultTransactions = true)
+@EnableJpaRepositories(basePackages = "kc87.repository.jpa", enableDefaultTransactions = true)
 @SuppressWarnings("unused")
-public class PersistenceConfig {
+public class PersistenceJpaConfig {
 
    @Bean
    public DataSource dataSource() {
@@ -52,13 +49,4 @@ public class PersistenceConfig {
 
       return factoryBean;
    }
-
-   /*
-   @Bean
-   public Jackson2RepositoryPopulatorFactoryBean repositoryPopulator() {
-      Jackson2RepositoryPopulatorFactoryBean factoryBean = new Jackson2RepositoryPopulatorFactoryBean();
-      Resource sourceData = new ClassPathResource("db/accounts.json");
-      factoryBean.setResources(new Resource[] { sourceData });
-      return factoryBean;
-   }*/
 }
