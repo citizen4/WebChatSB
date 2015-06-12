@@ -4,5 +4,5 @@ import kc87.domain.ChatLog;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 @SuppressWarnings("unused")
-public interface ChatLogRepository extends MongoRepository<ChatLog,String> {
+public interface ChatLogRepository extends MongoRepository<ChatLog, String> {
 }

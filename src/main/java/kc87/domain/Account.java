@@ -38,7 +38,8 @@ public class Account implements Serializable {
    private String roles;
 
 
-   @Id @GeneratedValue(strategy = GenerationType.AUTO)
+   @Id
+   @GeneratedValue(strategy = GenerationType.AUTO)
    public Long getId() {
       return id;
    }
@@ -103,13 +104,13 @@ public class Account implements Serializable {
    @Override
    public String toString() {
       return "Account{" +
-              "id=" + id +
-              ", firstName='" + firstName + '\'' +
-              ", lastName='" + lastName + '\'' +
-              ", email='" + email + '\'' +
-              ", username='" + username + '\'' +
-              ", roles='" + roles + '\'' +
-              ", password='" + password + '\'' +
-              '}';
+            "id=" + id +
+            ", firstName='" + firstName + '\'' +
+            ", lastName='" + lastName + '\'' +
+            ", email='" + email + '\'' +
+            ", username='" + username + '\'' +
+            ", roles='" + roles + '\'' +
+            ", password='" + password + '\'' +
+            '}';
    }
 }

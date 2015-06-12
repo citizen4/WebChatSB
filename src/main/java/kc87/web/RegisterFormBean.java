@@ -2,6 +2,7 @@ package kc87.web;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.SafeHtml;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -76,11 +77,11 @@ public class RegisterFormBean {
    @Override
    public String toString() {
       return "RegisterFormBean{" +
-              "firstName='" + firstName + '\'' +
-              ", lastName='" + lastName + '\'' +
-              ", email='" + email + '\'' +
-              ", username='" + username + '\'' +
-              ", password='" + password + '\'' +
-              '}';
+            "firstName='" + firstName + '\'' +
+            ", lastName='" + lastName + '\'' +
+            ", email='" + email + '\'' +
+            ", username='" + username + '\'' +
+            ", password='" + password + '\'' +
+            '}';
    }
 }

@@ -37,14 +37,14 @@ public class ServiceController {
    }
 
    private void checkPermissions(final Authentication authentication) {
-      if(authentication != null && authentication.isAuthenticated()) {
-         if(authentication.getAuthorities().contains(ADMIN_AUTHORITY)){
+      if (authentication != null && authentication.isAuthenticated()) {
+         if (authentication.getAuthorities().contains(ADMIN_AUTHORITY)) {
             LOG.debug("Access granted!");
             return;
          }
       }
       LOG.debug("Access denied!");
-      throw new RestException(HttpStatus.UNAUTHORIZED,null);
+      throw new RestException(HttpStatus.UNAUTHORIZED, null);
    }
 
 

@@ -18,7 +18,7 @@ public class PersistenceMongoConfig {
    public MongoDbFactory mongoDbFactory() throws Exception {
       MongoClientOptions.Builder builder = new MongoClientOptions.Builder();
       builder.connectTimeout(1000);
-      MongoClientURI mongoClientURI = new MongoClientURI("mongodb://localhost/webchat",builder);
+      MongoClientURI mongoClientURI = new MongoClientURI("mongodb://localhost/webchat", builder);
       return new SimpleMongoDbFactory(mongoClientURI);
    }
 

@@ -38,34 +38,34 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
    @Override
    protected void configure(HttpSecurity http) throws Exception {
       http.sessionManagement()
-              .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-              .sessionFixation()
-              .changeSessionId()
-              .maximumSessions(2)
-              .maxSessionsPreventsLogin(false)
-              .expiredUrl("/login?expired")
-              .sessionRegistry(sessionRegistry());
+            .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+            .sessionFixation()
+            .changeSessionId()
+            .maximumSessions(2)
+            .maxSessionsPreventsLogin(false)
+            .expiredUrl("/login?expired")
+            .sessionRegistry(sessionRegistry());
       http.formLogin()
-              .loginPage("/login")
-              .failureUrl("/login?error")
-              .successHandler((request, response, authentication) -> {
-                 String successUrl = "/chat";
-                 RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
-                 if(authentication.getAuthorities().contains(ADMIN_AUTHORITY)) {
-                    successUrl = "/service/accounts";
-                 }
-                 redirectStrategy.sendRedirect(request,response,successUrl);
-              });
-              //.defaultSuccessUrl("/chat");
+            .loginPage("/login")
+            .failureUrl("/login?error")
+            .successHandler((request, response, authentication) -> {
+               String successUrl = "/chat";
+               RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+               if (authentication.getAuthorities().contains(ADMIN_AUTHORITY)) {
+                  successUrl = "/service/accounts";
+               }
+               redirectStrategy.sendRedirect(request, response, successUrl);
+            });
+      //.defaultSuccessUrl("/chat");
       http.logout()
-              .logoutUrl("/logout")
-              .logoutSuccessUrl("/login?logout")
-              .deleteCookies("SID")
-              .invalidateHttpSession(true);
+            .logoutUrl("/logout")
+            .logoutSuccessUrl("/login?logout")
+            .deleteCookies("SID")
+            .invalidateHttpSession(true);
       http.httpBasic().disable();
       http.csrf().disable();
       // Access to the service endpoint is handled by the REST controller itself
-      http.authorizeRequests().antMatchers("/", "/index.*","/service/**").permitAll();
+      http.authorizeRequests().antMatchers("/", "/index.*", "/service/**").permitAll();
       http.authorizeRequests().antMatchers("/intern/**").hasRole("ADMIN");
       http.authorizeRequests().antMatchers("/chat").hasRole("USER");
       http.authorizeRequests().antMatchers("/login", "/register").anonymous();
