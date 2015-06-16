@@ -1,4 +1,4 @@
-package kc87.util;
+package kc87.service.crypto;
 
 
 import org.apache.logging.log4j.LogManager;

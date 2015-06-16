@@ -2,7 +2,8 @@ package kc87.service;
 
 import kc87.domain.Account;
 import kc87.repository.jpa.AccountRepository;
-import kc87.util.SimplePasswordEncoder;
+import kc87.service.crypto.ScryptPasswordEncoder;
+import kc87.service.crypto.SimplePasswordEncoder;
 import kc87.web.RegisterFormBean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,6 +16,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -26,6 +28,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class DefaultAccountService implements AccountService {
    private static final Logger LOG = LogManager.getLogger(DefaultAccountService.class);
+   private static final PasswordEncoder PASSWORD_ENCODER = new ScryptPasswordEncoder();
 
    @Autowired
    //@Qualifier("inMemory")
@@ -61,8 +64,7 @@ public class DefaultAccountService implements AccountService {
          newAccount.setLastName(account.getLastName());
          newAccount.setEmail(account.getEmail());
          newAccount.setUsername(account.getUsername());
-         newAccount.setPassword(password == null ? account.getPassword() :
-               SimplePasswordEncoder.encryptPassword(password));
+         newAccount.setPassword(PASSWORD_ENCODER.encode(password));
          newAccount.setRoles(account.getRoles() == null ? "USER" : account.getRoles());
          accountRepository.save(newAccount);
       } else {
@@ -101,14 +103,16 @@ public class DefaultAccountService implements AccountService {
          if (accounts instanceof List) {
             for (Object account : (List) accounts) {
                try {
-                  createAccount((Account) account, null);
+                  createAccount((Account) account, ((Account) account).getPassword());
                } catch (UsernameAlreadyTakenException e) {
                   LOG.warn(e);
+                  // XXX
+                  return;
                }
             }
          } else {
             try {
-               createAccount((Account) accounts, null);
+               createAccount((Account) accounts, ((Account) accounts).getPassword());
             } catch (UsernameAlreadyTakenException e) {
                LOG.warn(e);
             }

@@ -34,6 +34,7 @@ header form {
     font-weight: bold;
     font-family: sans-serif;
     border-radius: 5px;
+    text-decoration: none;
 }
 
 .LogoutBtn {
@@ -42,15 +43,20 @@ header form {
     background: linear-gradient(to bottom, #feccb1 0%, #f17432 50%, #ea5507 51%, #fb955e 100%);
 }
 
+.DashboardBtn {
+    padding: 5px 5px;
+    color: #ee0;
+    border: 1px solid #c00;
+    background: linear-gradient(to bottom, #fe8844 0%, #ff0000 50%, #ea3307 51%, #aa0000 100%);
+}
+
 .SignInUpBtn {
     display: inline-block;
     margin: 2px;
     padding: 4px;
-    text-decoration: none;
     border: 1px solid #4a0;
     background: linear-gradient(to bottom, #ccffb1 0%, #74f132 50%, #55ea07 51%, #95fb5e 100%)
 }
-
 
 .AccountGreeting {
     color: #ffffff;

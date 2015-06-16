@@ -1,0 +1,49 @@
+
+.AccountTable {
+    position: relative;
+    top:10%;
+    height: 50%;
+    color: #fff;
+}
+
+.AccountTable h1 {
+    text-align: center;
+}
+
+.AccountTable > div {
+    position: relative;
+    margin: 0 auto;
+    top: 30px;
+    height: 190px;
+    width:  900px;
+    background-color: #66f;
+    border: 1px solid #aaa;
+}
+
+.AccountTable > div + div {
+    height: auto;
+    padding: 4px 0;
+    background-color: #004;
+}
+
+.AccountTable > div + div span {
+    margin-left: 4px;
+}
+
+.AccountTable table {
+    width: 100%;
+    font-size: 18px;
+    background-color: #66f;
+}
+
+.AccountTable th {
+    color: #000;
+    padding: 6px;
+    background-color: #acf;
+}
+
+.AccountTable td {
+    padding: 2px 4px;
+    border: 1px solid #ccc;
+    background-color: #006;
+}

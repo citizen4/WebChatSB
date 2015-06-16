@@ -1,11 +1,49 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html data-ng-app="dashboardApp" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <title>Admin Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/global.css}" href="/css/global.css"/>
+    <link rel="stylesheet" th:href="@{/css/header.css}" href="/css/header.css"/>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}" href="/css/dashboard.css"/>
 </head>
 <body>
-<h1>Dashboard</h1>
-<a href="/logout">Logout</a>
+<div th:replace="fragments/header :: #top-state"></div>
+<div class="AccountTable" data-ng-controller="AccountCtrl">
+    <h1>Account List</h1>
+    <div>
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>E-Mail Address</th>
+                <th>Roles</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-ng-repeat="account in accounts">
+                <td>{{account.id}}</td>
+                <td>{{account.username}}</td>
+                <td>{{account.firstName}}</td>
+                <td>{{account.lastName}}</td>
+                <td>{{account.email}}</td>
+                <td>{{account.roles}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <span>Page {{page.number + 1}} of {{page.totalPages}}</span>
+        <button data-ng-click="loadAccountPage(page.number + 1)">NEXT</button>
+    </div>
+
+
+</div>
+<script src="/js/angular.min.js"></script>
+<script src="/js/angular-hal.js"></script>
+<script src="/js/dashboard.js"></script>
 </body>
 </html>
