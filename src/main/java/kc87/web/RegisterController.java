@@ -1,7 +1,7 @@
 package kc87.web;
 
+import kc87.domain.Account;
 import kc87.service.AccountService;
-import kc87.service.DefaultAccountService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,14 +35,13 @@ public class RegisterController {
    @RequestMapping(method = RequestMethod.POST)
    public String handleSubmit(@Valid RegisterFormBean formBean, BindingResult result) {
       if (!result.hasErrors()) {
-         LOG.debug(formBean.toString());
-         try {
-            accountService.createAccount(formBean);
+         Account newAccount = accountService.prepareAccount(formBean);
+         accountService.validateAccount(newAccount,result);
+         if(!result.hasErrors()) {
+            accountService.createAccount(newAccount);
             // After successful registration, login the user automatically
             autoLogin(formBean.getUsername());
             return "redirect:chat";
-         } catch (DefaultAccountService.UsernameAlreadyTakenException e) {
-            result.rejectValue("username", "error.username_taken", "Username error!");
          }
       }
       return "register";

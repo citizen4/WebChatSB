@@ -2,6 +2,7 @@ package kc87.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.validator.constraints.Email;
 import org.springframework.data.annotation.AccessType;
 
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
@@ -27,14 +29,17 @@ public class Account implements Serializable {
    private String lastName;
 
    @NotNull
+   @Email(message = "{error.email_invalid}")
    private String email;
 
    @NotNull
+   @Size(min = 2, max = 32, message = "{error.wrong_length}")
    private String username;
 
    @NotNull
    private String password;
 
+   @NotNull
    private String roles;
 
 

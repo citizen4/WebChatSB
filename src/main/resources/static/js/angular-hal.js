@@ -210,7 +210,7 @@ angular.module('angular-hal', [])
             var resource = (
                 $http({
                     method: method,
-                    url: /*options.transformUrl ? options.transformUrl(href) :*/ href,
+                    url: options.transformUrl ? options.transformUrl(href) : href,
                     headers: options.headers,
                     data: data
                 })

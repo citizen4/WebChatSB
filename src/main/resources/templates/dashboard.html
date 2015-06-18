@@ -38,8 +38,21 @@
     <div>
         <span>Page {{page.number + 1}} of {{page.totalPages}}</span>
         <button data-ng-click="loadAccountPage(page.number + 1)">NEXT</button>
+        <!--<button data-ng-click="updateAccount(accounts[3],{username:'paule'})">UPDATE</button>-->
     </div>
-
+    <div>
+        <label>Username:</label>
+        <label>First Name:</label>
+        <label>Last Name:</label>
+        <label>E-Mail:</label>
+        <label>Password:</label><br/>
+        <input type="text" data-ng-model="account.username"/>
+        <input type="text" data-ng-model="account.firstName"/>
+        <input type="text" data-ng-model="account.lastName"/>
+        <input type="text" data-ng-model="account.email"/>
+        <input type="password" data-ng-model="account.password"/>
+        <button data-ng-click="createAccount(account)">CREATE</button>
+    </div>
 
 </div>
 <script src="/js/angular.min.js"></script>
