@@ -2,6 +2,7 @@ package kc87.web;
 
 import kc87.domain.Account;
 import kc87.service.AccountService;
+import kc87.service.validator.AccountValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,10 @@ public class RegisterController {
    private static final Logger LOG = LogManager.getLogger(RegisterController.class);
 
    @Autowired
-   AccountService accountService;
+   private AccountService accountService;
+
+   @Autowired
+   private AccountValidator accountValidator;
 
    @RequestMapping(method = RequestMethod.GET)
    public ModelAndView form(final ModelAndView modelView) {
@@ -36,7 +40,8 @@ public class RegisterController {
    public String handleSubmit(@Valid RegisterFormBean formBean, BindingResult result) {
       if (!result.hasErrors()) {
          Account newAccount = accountService.prepareAccount(formBean);
-         accountService.validateAccount(newAccount,result);
+         accountValidator.validate(newAccount,result);
+         //accountService.validateAccount(newAccount,result);
          if(!result.hasErrors()) {
             accountService.createAccount(newAccount);
             // After successful registration, login the user automatically

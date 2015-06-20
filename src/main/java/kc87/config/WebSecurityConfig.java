@@ -6,6 +6,7 @@ import kc87.service.crypto.SimplePasswordEncoder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDeniedException;
@@ -34,6 +35,9 @@ import java.io.IOException;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
    private static final Logger LOG = LogManager.getLogger(WebSecurityConfig.class);
    private static final GrantedAuthority ADMIN_AUTHORITY = new SimpleGrantedAuthority("ROLE_ADMIN");
+
+   @Value("${webchat.session.cookiename}")
+   private String cookieName;
 
    @Autowired
    AccountService accountService;
@@ -78,7 +82,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       http.logout()
               .logoutUrl("/logout")
               .logoutSuccessUrl("/login?logout")
-              .deleteCookies("SID")
+              .deleteCookies(cookieName)
               .invalidateHttpSession(true);
 
       http.httpBasic().disable();

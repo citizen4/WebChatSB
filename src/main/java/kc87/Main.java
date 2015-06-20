@@ -16,24 +16,4 @@ public class Main {
       springApplication.setWebEnvironment(true);
       springApplication.run(args);
    }
-
-   /*
-   @Bean
-   public DispatcherServlet dispatcherServlet() {
-      return new DispatcherServlet();
-   }
-
-   @Bean
-    public ServletRegistrationBean webServlet() {
-      //DispatcherServlet dispatcherServlet = new DispatcherServlet();
-      //AnnotationConfigWebApplicationContext applicationContext = new AnnotationConfigWebApplicationContext();
-
-      //applicationContext.register(WebAppConfig.class, WebSecurityConfig.class);
-      //dispatcherServlet.setApplicationContext(applicationContext);
-
-      ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean(dispatcherServlet(),"/web/*");
-      servletRegistrationBean.setName("web");
-      return servletRegistrationBean;
-   }*/
-
 }

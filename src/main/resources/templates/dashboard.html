@@ -25,11 +25,11 @@
             </thead>
             <tbody>
             <tr data-ng-repeat="account in accounts">
-                <td>{{account.id}}</td>
+                <td title="{{account.id}}">{{account.id}}</td>
                 <td>{{account.username}}</td>
                 <td>{{account.firstName}}</td>
                 <td>{{account.lastName}}</td>
-                <td>{{account.email}}</td>
+                <td title="{{account.email}}">{{account.email}}</td>
                 <td>{{account.roles}}</td>
             </tr>
             </tbody>
@@ -38,7 +38,7 @@
     <div>
         <span>Page {{page.number + 1}} of {{page.totalPages}}</span>
         <button data-ng-click="loadAccountPage(page.number + 1)">NEXT</button>
-        <!--<button data-ng-click="updateAccount(accounts[3],{username:'paule'})">UPDATE</button>-->
+        <button data-ng-click="updateAccount(accounts[1],{username:'user666'})">UPDATE</button>
     </div>
     <div>
         <label>Username:</label>

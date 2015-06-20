@@ -1,9 +1,7 @@
 package kc87.config;
 
 import kc87.domain.Account;
-import kc87.service.AccountService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import kc87.service.validator.AccountValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
@@ -11,12 +9,12 @@ import org.springframework.data.rest.core.event.ValidatingRepositoryEventListene
 import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
 import org.springframework.http.MediaType;
 
+
 @Configuration
 public class RestConfig extends RepositoryRestMvcConfiguration {
-   private static final Logger LOG = LogManager.getLogger(RestConfig.class);
 
    @Autowired
-   AccountService accountService;
+   private AccountValidator accountValidator;
 
    @Override
    public RepositoryRestConfiguration config() {
@@ -30,7 +28,7 @@ public class RestConfig extends RepositoryRestMvcConfiguration {
 
    @Override
    protected void configureValidatingRepositoryEventListener(ValidatingRepositoryEventListener validatingListener) {
-      validatingListener.addValidator("beforeCreate" , accountService.getAccountValidator());
-      validatingListener.addValidator("beforeSave" , accountService.getAccountValidator());
+      validatingListener.addValidator("beforeCreate" , accountValidator);
+      validatingListener.addValidator("beforeSave" , accountValidator);
    }
 }

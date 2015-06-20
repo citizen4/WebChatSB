@@ -2,13 +2,14 @@ package kc87.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Email;
 import org.springframework.data.annotation.AccessType;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -16,11 +17,14 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
+@Document
 @Table(name = "account_tbl")
 @AccessType(AccessType.Type.PROPERTY)
 @SuppressWarnings("unused")
 public class Account implements Serializable {
-   private Long id;
+   private String id;
+
+   private Long created;
 
    @NotNull
    private String firstName;
@@ -42,15 +46,23 @@ public class Account implements Serializable {
    @NotNull
    private String roles;
 
-
    @Id
-   @GeneratedValue(strategy = GenerationType.AUTO)
-   public Long getId() {
+   @GeneratedValue(generator = "uuid")
+   @GenericGenerator(name = "uuid", strategy = "uuid2")
+   public String getId() {
       return id;
    }
 
-   public void setId(Long id) {
+   public void setId(String id) {
       this.id = id;
+   }
+
+   public Long getCreated() {
+      return this.created;
+   }
+
+   public void setCreated(Long created) {
+      this.created = created;
    }
 
    @Column(name = "first_name")
@@ -106,16 +118,18 @@ public class Account implements Serializable {
       this.roles = roles;
    }
 
+
    @Override
    public String toString() {
       return "Account{" +
-            "id=" + id +
-            ", firstName='" + firstName + '\'' +
-            ", lastName='" + lastName + '\'' +
-            ", email='" + email + '\'' +
-            ", username='" + username + '\'' +
-            ", roles='" + roles + '\'' +
-            ", password='" + password + '\'' +
-            '}';
+              "id=" + id +
+              ", created='" + created + '\'' +
+              ", firstName='" + firstName + '\'' +
+              ", lastName='" + lastName + '\'' +
+              ", email='" + email + '\'' +
+              ", username='" + username + '\'' +
+              ", roles='" + roles + '\'' +
+              ", password='" + password + '\'' +
+              '}';
    }
 }

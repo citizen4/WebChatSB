@@ -3,11 +3,18 @@ package kc87.config;
 import kc87.web.WsChatServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.server.ConnectionFactory;
 import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
+import org.eclipse.jetty.server.SecureRequestCustomizer;
+import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.SslConnectionFactory;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.hibernate.validator.HibernateValidator;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
 import org.springframework.boot.context.embedded.ServletListenerRegistrationBean;
 import org.springframework.boot.context.embedded.jetty.JettyEmbeddedServletContainerFactory;
@@ -23,43 +30,27 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 import javax.servlet.SessionTrackingMode;
+import java.security.KeyStore;
 import java.util.EnumSet;
+import java.util.concurrent.TimeUnit;
 
 
 @Configuration
 @SuppressWarnings("unused")
 public class WebAppConfig extends WebMvcConfigurerAdapter {
-
    private static final Logger LOG = LogManager.getLogger(WebAppConfig.class);
 
-   @Bean
-   public EmbeddedServletContainerFactory servletContainer() {
-      JettyEmbeddedServletContainerFactory factory = new JettyEmbeddedServletContainerFactory();
+   @Value("${webchat.http.port}")
+   private int httpPort;
 
-      //factory.setSessionTimeout(60, TimeUnit.SECONDS);
+   @Value("${webchat.https.port}")
+   private int httpsPort;
 
-      factory.addInitializers(servletContext -> {
-         servletContext.setSessionTrackingModes(EnumSet.of(SessionTrackingMode.COOKIE));
-         servletContext.getSessionCookieConfig().setName("SID");
-      });
+   @Value("${webchat.session.timeout}")
+   private int sessionTimeout;
 
-      factory.addServerCustomizers(server -> {
-         // Add a HTTP connector in addition to HTTPS
-         ServerConnector serverConnector = new ServerConnector(server);
-         serverConnector.setPort(8080);
-         server.addConnector(serverConnector);
-         // Disable http server header for all connectors
-         for (Connector connector : server.getConnectors()) {
-            for (ConnectionFactory connectionFactory : connector.getConnectionFactories()) {
-               if (connectionFactory instanceof HttpConnectionFactory) {
-                  ((HttpConnectionFactory) connectionFactory).getHttpConfiguration().setSendServerVersion(false);
-               }
-            }
-         }
-      });
-
-      return factory;
-   }
+   @Value("${webchat.session.cookiename}")
+   private String cookieName;
 
 
    @Bean
@@ -77,7 +68,6 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
    public ServletListenerRegistrationBean httpSessionEventPublisher() {
       return new ServletListenerRegistrationBean(new HttpSessionEventPublisher());
    }
-
 
    @Bean
    public MessageSource messageSource() {
@@ -108,4 +98,60 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
       registry.addViewController("/login").setViewName("login");
       registry.addViewController("/chat").setViewName("chat");
    }
+
+
+   @Bean
+   public EmbeddedServletContainerFactory servletContainer() {
+      JettyEmbeddedServletContainerFactory factory = new JettyEmbeddedServletContainerFactory();
+
+      factory.setSessionTimeout(sessionTimeout, TimeUnit.SECONDS);
+
+      factory.addInitializers(servletContext -> {
+         servletContext.setSessionTrackingModes(EnumSet.of(SessionTrackingMode.COOKIE));
+         servletContext.getSessionCookieConfig().setName(cookieName);
+      });
+
+      factory.addServerCustomizers(server -> {
+         ServerConnector defaultConnector = (ServerConnector)(server.getConnectors())[0];
+         defaultConnector.setPort(httpPort);
+         addHttpsConnector(server);
+         // Disable http server header for all connectors
+         for (Connector connector : server.getConnectors()) {
+            //LOG.debug(((ServerConnector) connector).getName());
+            for (ConnectionFactory connectionFactory : connector.getConnectionFactories()) {
+               if (connectionFactory instanceof HttpConnectionFactory) {
+                  HttpConfiguration httpConfiguration = ((HttpConnectionFactory) connectionFactory).getHttpConfiguration();
+                  httpConfiguration.setSendServerVersion(false);
+               }
+            }
+         }
+      });
+
+      return factory;
+   }
+
+   private void addHttpConnector(final Server server) {
+      ServerConnector serverConnector = new ServerConnector(server);
+      serverConnector.setPort(httpPort);
+      server.addConnector(serverConnector);
+   }
+
+   private void addHttpsConnector(final Server server) {
+      SslContextFactory sslContextFactory = new SslContextFactory();
+      sslContextFactory.setKeyStorePassword("secret");
+      sslContextFactory.setKeyManagerPassword("password");
+      sslContextFactory.setKeyStorePath(WebAppConfig.class.getResource("/sample.jks").toExternalForm());
+      sslContextFactory.setKeyStoreType("JKS");
+      sslContextFactory.setNeedClientAuth(false);
+
+      HttpConfiguration httpsConfiguration = new HttpConfiguration();
+      httpsConfiguration.addCustomizer(new SecureRequestCustomizer());
+
+      ServerConnector httpsConnector = new ServerConnector(server,
+              new SslConnectionFactory(sslContextFactory, HttpVersion.HTTP_1_1.asString()),
+              new HttpConnectionFactory(httpsConfiguration));
+      httpsConnector.setPort(httpsPort);
+      server.addConnector(httpsConnector);
+   }
+
 }

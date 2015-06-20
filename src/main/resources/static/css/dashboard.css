@@ -15,7 +15,7 @@
     position: relative;
     margin: 0 auto;
     top: 30px;
-    height: 190px;
+    height: 176px;
     width:  900px;
     background-color: #959;
     border: 1px solid #aaa;
@@ -44,9 +44,17 @@
 }
 
 .AccountTable td {
+    font-size: 16px;
     padding: 2px 4px;
     border: 1px solid #ccc;
     background-color: #006;
+    overflow:  hidden;
+    text-overflow: ellipsis;
+}
+
+.AccountTable td:first-child {
+    max-width: 50px;
+    word-break: keep-all;
 }
 
 .AccountTable input {

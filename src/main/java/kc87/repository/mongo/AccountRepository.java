@@ -1,8 +1,7 @@
-package kc87.repository.jpa;
+package kc87.repository.mongo;
 
-import kc87.domain.Account;
-import org.springframework.context.annotation.Profile;
-import org.springframework.data.jpa.repository.JpaRepository;
+import kc87.domain.Account;;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
@@ -10,6 +9,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 @NoRepositoryBean
 @RepositoryRestResource(exported = true)
 @SuppressWarnings("unused")
-public interface AccountRepository extends JpaRepository<Account, String> {
+public interface AccountRepository extends MongoRepository<Account, String> {
    Account findByUsernameIgnoreCase(String username);
 }

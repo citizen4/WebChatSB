@@ -12,7 +12,7 @@ dashboardApp.controller('AccountCtrl', function ($log, $window, $scope, halClien
    }
 
    function accountPage(pageNumber) {
-      $scope.serviceResource.$get('accounts', {'page': pageNumber, 'size': 5, sort: null})
+      $scope.serviceResource.$get('accounts', {'page': pageNumber, 'size': 5, sort: 'created'})
           .then(function (resource) {
              $scope.page = resource.page;
              return resource.$get('accounts');
@@ -24,23 +24,21 @@ dashboardApp.controller('AccountCtrl', function ($log, $window, $scope, halClien
 
    // PATCH Bug in Spring Data Rest: DATAREST-441
    $scope.updateAccount = function (account, data) {
-      account.$put('self', {}, data)
+      account.$patch('self', {}, data)
           .then(function (resource) {
              $log.info("updateAccount: " + resource);
           }, function (error) {
-             $log.error("updateAccount: " + error);
+             showErrorMsg(error);
           });
    };
 
    $scope.createAccount = function (account) {
-
       account.roles = "USER";
-
       $scope.serviceResource.$post('accounts', {}, account)
           .then(function (resource) {
              $log.info("createAccount: " + resource);
+             $window.alert("Account for user '"+$scope.account.username+"' created!");
              $scope.account = {username:null,firstName:null,lastName:null,email:null,password:null,roles:null};
-             accountPage($scope.page.totalPages - 1);
           }, function (error) {
              showErrorMsg(error);
           });
