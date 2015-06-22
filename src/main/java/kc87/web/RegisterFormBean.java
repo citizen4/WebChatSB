@@ -1,38 +1,18 @@
 package kc87.web;
 
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.SafeHtml;
-
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
 
 @SuppressWarnings("unused")
 public class RegisterFormBean {
 
-   @NotNull
-   @SafeHtml(message = "No weired content please!")
-   @Size(min = 2, max = 32, message = "Wrong size! (min: 2, max: 32)")
    private String firstName;
 
-   @NotNull
-   @SafeHtml(message = "No weired content please!")
-   @Size(min = 2, max = 32, message = "Wrong size! (min: 2, max: 32)")
    private String lastName;
 
-   @NotNull
-   @Email(message = "{error.email_invalid}")
    private String email;
 
-   @NotNull
-   @SafeHtml(message = "No weired content please!")
-   @Size(min = 2, max = 16, message = "Wrong size! (min: 2, max: 16)")
    private String username;
 
-   @NotNull
-   @Size(min = 6, max = 32, message = "Wrong size! (min: 6, max: 32)")
    private String password;
-
 
    public String getFirstName() {
       return firstName;
@@ -77,11 +57,11 @@ public class RegisterFormBean {
    @Override
    public String toString() {
       return "RegisterFormBean{" +
-            "firstName='" + firstName + '\'' +
-            ", lastName='" + lastName + '\'' +
-            ", email='" + email + '\'' +
-            ", username='" + username + '\'' +
-            ", password='" + password + '\'' +
-            '}';
+              "firstName='" + firstName + '\'' +
+              ", lastName='" + lastName + '\'' +
+              ", email='" + email + '\'' +
+              ", username='" + username + '\'' +
+              ", password='" + password + '\'' +
+              '}';
    }
 }

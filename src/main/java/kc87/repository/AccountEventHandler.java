@@ -22,6 +22,6 @@ public class AccountEventHandler {
    @HandleBeforeCreate
    public void handleAccountCreate(Account account) {
       LOG.debug("HandleBeforeCreate");
-      accountService.prepareAccount(account,account.getPassword());
+      accountService.prepareAccount(account, account.getPassword());
    }
 }

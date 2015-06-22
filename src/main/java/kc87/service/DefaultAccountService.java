@@ -104,10 +104,10 @@ public class DefaultAccountService implements AccountService {
          Object accounts = resourceReader.readFrom(accountResource, this.getClass().getClassLoader());
          if (accounts instanceof List) {
             for (Object account : (List) accounts) {
-               createTestAccount((Account)account);
+               createTestAccount((Account) account);
             }
          } else {
-            createTestAccount((Account)accounts);
+            createTestAccount((Account) accounts);
          }
       } catch (Exception e) {
          LOG.error(e);
@@ -120,7 +120,7 @@ public class DefaultAccountService implements AccountService {
       if (!errors.hasErrors()) {
          createAccount(account);
       } else {
-         for(ObjectError error : errors.getAllErrors()) {
+         for (ObjectError error : errors.getAllErrors()) {
             LOG.warn(error.getDefaultMessage());
          }
       }

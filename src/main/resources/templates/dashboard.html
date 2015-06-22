@@ -7,7 +7,7 @@
     <link rel="stylesheet" th:href="@{/css/header.css}" href="/css/header.css"/>
     <link rel="stylesheet" th:href="@{/css/dashboard.css}" href="/css/dashboard.css"/>
 </head>
-<body>
+<body data-ng-controller="DashboardCtrl">
 <div th:replace="fragments/header :: #top-state"></div>
 <div class="AccountTable" data-ng-controller="AccountCtrl">
     <h1>Account List</h1>
@@ -15,22 +15,24 @@
         <table>
             <thead>
             <tr>
-                <th>ID</th>
                 <th>Username</th>
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>E-Mail Address</th>
                 <th>Roles</th>
+                <th>Created</th>
+                <!--<th>ID</th>-->
             </tr>
             </thead>
             <tbody>
             <tr data-ng-repeat="account in accounts">
-                <td title="{{account.id}}">{{account.id}}</td>
-                <td>{{account.username}}</td>
-                <td>{{account.firstName}}</td>
-                <td>{{account.lastName}}</td>
-                <td title="{{account.email}}">{{account.email}}</td>
+                <td><input data-ng-model="account.username" data-ng-focus="editorHandler($event,$index)" data-ng-blur="editorHandler($event,$index)"/></td>
+                <td><input data-ng-model="account.firstName" data-ng-focus="editorHandler($event,$index)" data-ng-blur="editorHandler($event,$index)"/></td>
+                <td><input data-ng-model="account.lastName" data-ng-focus="editorHandler($event,$index)" data-ng-blur="editorHandler($event,$index)"/></td>
+                <td title="{{account.email}}"><input data-ng-model="account.email" data-ng-focus="editorHandler($event,$index)" data-ng-blur="editorHandler($event,$index)"/></td>
                 <td>{{account.roles}}</td>
+                <td>{{account.created | date: 'dd.MM.yy HH:mm:ss.sss'}}</td>
+                <!--<td class="FixedColumn" title="{{account.id}}">{{account.id}}</td>-->
             </tr>
             </tbody>
         </table>
@@ -38,7 +40,6 @@
     <div>
         <span>Page {{page.number + 1}} of {{page.totalPages}}</span>
         <button data-ng-click="loadAccountPage(page.number + 1)">NEXT</button>
-        <button data-ng-click="updateAccount(accounts[1],{username:'user666'})">UPDATE</button>
     </div>
     <div>
         <label>Username:</label>
@@ -53,7 +54,11 @@
         <input type="password" data-ng-model="account.password"/>
         <button data-ng-click="createAccount(account)">CREATE</button>
     </div>
-
+</div>
+<div class="FooterMsg">
+    <span data-ng-show="footerMsg.msg">{{footerMsg.msg}}</span>
+    <span class="SuccessMsg" data-ng-show="footerMsg.success">{{footerMsg.success}}</span>
+    <span class="ErrorMsg" data-ng-show="footerMsg.error">{{footerMsg.error}}</span>
 </div>
 <script src="/js/angular.min.js"></script>
 <script src="/js/angular-hal.js"></script>

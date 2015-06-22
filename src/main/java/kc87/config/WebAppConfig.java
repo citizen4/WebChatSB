@@ -30,7 +30,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 import javax.servlet.SessionTrackingMode;
-import java.security.KeyStore;
 import java.util.EnumSet;
 import java.util.concurrent.TimeUnit;
 
@@ -64,9 +63,8 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
    }
 
    @Bean
-   @SuppressWarnings("unchecked")
    public ServletListenerRegistrationBean httpSessionEventPublisher() {
-      return new ServletListenerRegistrationBean(new HttpSessionEventPublisher());
+      return new ServletListenerRegistrationBean<>(new HttpSessionEventPublisher());
    }
 
    @Bean
@@ -112,7 +110,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
       });
 
       factory.addServerCustomizers(server -> {
-         ServerConnector defaultConnector = (ServerConnector)(server.getConnectors())[0];
+         ServerConnector defaultConnector = (ServerConnector) (server.getConnectors())[0];
          defaultConnector.setPort(httpPort);
          addHttpsConnector(server);
          // Disable http server header for all connectors

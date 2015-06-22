@@ -14,11 +14,11 @@ public class ScryptPasswordEncoder implements PasswordEncoder {
 
    @Override
    public String encode(CharSequence rawPassword) {
-      return SCryptUtil.scrypt(rawPassword.toString(),PARAMETER_N,PARAMETER_R,PARAMETER_P);
+      return SCryptUtil.scrypt(rawPassword.toString(), PARAMETER_N, PARAMETER_R, PARAMETER_P);
    }
 
    @Override
    public boolean matches(CharSequence rawPassword, String encodedPassword) {
-      return SCryptUtil.check(rawPassword.toString(),encodedPassword);
+      return SCryptUtil.check(rawPassword.toString(), encodedPassword);
    }
 }

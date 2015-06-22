@@ -7,6 +7,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource(exported = true)
 @SuppressWarnings("unused")
-public interface AccountRepository extends PagingAndSortingRepository<Account,String> {
+public interface AccountRepository extends PagingAndSortingRepository<Account, String> {
    Account findByUsernameIgnoreCase(String username);
 }

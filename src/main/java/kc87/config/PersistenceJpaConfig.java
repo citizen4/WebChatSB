@@ -4,14 +4,9 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.data.domain.AuditorAware;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 import javax.persistence.ValidationMode;
@@ -21,8 +16,8 @@ import java.util.Map;
 
 @Configuration
 @EnableJpaRepositories(basePackages = {
-         "kc87.repository.jpa"
-        ,"kc87.repository.generic"
+        "kc87.repository.jpa"
+        //,"kc87.repository.generic"
 }, enableDefaultTransactions = true)
 @SuppressWarnings("unused")
 public class PersistenceJpaConfig {

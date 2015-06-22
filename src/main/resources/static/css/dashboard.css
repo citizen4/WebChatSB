@@ -15,8 +15,8 @@
     position: relative;
     margin: 0 auto;
     top: 30px;
-    height: 176px;
-    width:  900px;
+    height: 182px;
+    width:  1024px;
     background-color: #959;
     border: 1px solid #aaa;
 }
@@ -45,17 +45,38 @@
 
 .AccountTable td {
     font-size: 16px;
-    padding: 2px 4px;
+    padding: 1px;
     border: 1px solid #ccc;
     background-color: #006;
     overflow:  hidden;
     text-overflow: ellipsis;
+    word-break: keep-all;
+    white-space: nowrap;
+    max-width: 170px;
 }
 
-.AccountTable td:first-child {
+td.FixedColumn {
     max-width: 50px;
-    word-break: keep-all;
 }
+
+.AccountTable td input {
+    display: table-cell;
+    margin: 0;
+    padding: 2px;
+    font-size: 16px;
+    border: none;
+    background-color: transparent;
+    min-width: 100%;
+    overflow:  hidden;
+    text-overflow: ellipsis;
+}
+
+
+.AccountTable td input:focus {
+    border: 1px solid #f00;
+    font-weight: bold;
+}
+
 
 .AccountTable input {
     border: 1px solid #ccc;
@@ -70,4 +91,21 @@
     margin: 0 0 0 4px;
     font-size: 14px;
     font-weight: bold;
+}
+
+.FooterMsg {
+    position: absolute;
+    bottom: 0;
+    color: #fff;
+    font-family: sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.SuccessMsg {
+    color: #0f0;
+}
+
+.ErrorMsg {
+    color: #f22;
 }

@@ -2,7 +2,6 @@ package kc87.config;
 
 import kc87.service.AccountService;
 import kc87.service.crypto.ScryptPasswordEncoder;
-import kc87.service.crypto.SimplePasswordEncoder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,12 +104,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       LOG.debug("handleServiceAccess: " + accessException.toString());
 
       int httpResponseStatus = (accessException instanceof AccessDeniedException) ?
-             HttpServletResponse.SC_UNAUTHORIZED : HttpServletResponse.SC_FORBIDDEN;
+              HttpServletResponse.SC_UNAUTHORIZED : HttpServletResponse.SC_FORBIDDEN;
 
-      if(serviceMatcher.matches(request)) {
+      if (serviceMatcher.matches(request)) {
          // No error page for service requests
          response.setStatus(httpResponseStatus);
-      }else {
+      } else {
          // Show error page
          response.sendError(httpResponseStatus);
       }

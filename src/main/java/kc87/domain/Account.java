@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.data.annotation.AccessType;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -27,9 +28,14 @@ public class Account implements Serializable {
    private Long created;
 
    @NotNull
+   @Size(min = 2, max = 32, message = "{error.wrong_length}")
+   //@Size(min = 2, max = 32)
+   @SafeHtml(message = "{error.unsafe_content}")
    private String firstName;
 
    @NotNull
+   @Size(min = 2, max = 32, message = "{error.wrong_length}")
+   @SafeHtml(message = "{error.unsafe_content}")
    private String lastName;
 
    @NotNull
@@ -38,6 +44,7 @@ public class Account implements Serializable {
 
    @NotNull
    @Size(min = 2, max = 32, message = "{error.wrong_length}")
+   @SafeHtml(message = "{error.unsafe_content}")
    private String username;
 
    @NotNull

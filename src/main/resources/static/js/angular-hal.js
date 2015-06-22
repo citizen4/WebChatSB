@@ -78,6 +78,8 @@ angular.module('angular-hal', [])
                     Object.defineProperty(this, key, {
                         configurable: false,
                         enumerable: true,
+                        //XXX default == false ??
+                        //writable: true,
                         value: data[key]
                     });
                 }, this);
@@ -113,6 +115,7 @@ angular.module('angular-hal', [])
                 Object.defineProperty(target, name, {
                     configurable: false,
                     enumerable: false,
+                    writable: false,
                     value: value
                 });
             } //defineHiddenProperty

@@ -45,7 +45,7 @@ public class WsChatServer implements ApplicationContextAware {
    private static final int IDLE_TIMEOUT_SEC = 60;
    private static final int WS_SESSION_TIMEOUT_SEC = 100;
    private static final String[] PEER_COLORS = {"#38F", "#f00", "#ff0", "#f08", "#0ff",
-         "#888", "#8ff", "#f80", "#ff4", "#fff"};
+           "#888", "#8ff", "#f80", "#ff4", "#fff"};
    private static final int PEER_COLOR_NB = PEER_COLORS.length;
    private static final AbstractMap<String, String> userColorMap = new ConcurrentHashMap<>();
    private static AtomicInteger usersLoggedIn = new AtomicInteger(0);

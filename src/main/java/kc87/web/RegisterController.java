@@ -2,7 +2,6 @@ package kc87.web;
 
 import kc87.domain.Account;
 import kc87.service.AccountService;
-import kc87.service.validator.AccountValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.Valid;
-
 @Controller
 @RequestMapping(value = "/register")
 public class RegisterController {
@@ -25,9 +22,6 @@ public class RegisterController {
 
    @Autowired
    private AccountService accountService;
-
-   @Autowired
-   private AccountValidator accountValidator;
 
    @RequestMapping(method = RequestMethod.GET)
    public ModelAndView form(final ModelAndView modelView) {
@@ -37,17 +31,14 @@ public class RegisterController {
    }
 
    @RequestMapping(method = RequestMethod.POST)
-   public String handleSubmit(@Valid RegisterFormBean formBean, BindingResult result) {
+   public String handleSubmit(RegisterFormBean formBean, BindingResult result) {
+      Account newAccount = accountService.prepareAccount(formBean);
+      accountService.validateAccount(newAccount, result);
       if (!result.hasErrors()) {
-         Account newAccount = accountService.prepareAccount(formBean);
-         accountValidator.validate(newAccount,result);
-         //accountService.validateAccount(newAccount,result);
-         if(!result.hasErrors()) {
-            accountService.createAccount(newAccount);
-            // After successful registration, login the user automatically
-            autoLogin(formBean.getUsername());
-            return "redirect:chat";
-         }
+         accountService.createAccount(newAccount);
+         // After successful registration, login the user automatically
+         autoLogin(formBean.getUsername());
+         return "redirect:chat";
       }
       return "register";
    }
