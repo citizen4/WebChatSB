@@ -54,7 +54,9 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
 
    @Bean
    public WsChatServer wsChatServer() {
-      return new WsChatServer();
+      WsChatServer chatServer = new WsChatServer();
+      chatServer.setChatSessionTimeout(sessionTimeout);
+      return chatServer;
    }
 
    @Bean
@@ -118,7 +120,8 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
             //LOG.debug(((ServerConnector) connector).getName());
             for (ConnectionFactory connectionFactory : connector.getConnectionFactories()) {
                if (connectionFactory instanceof HttpConnectionFactory) {
-                  HttpConfiguration httpConfiguration = ((HttpConnectionFactory) connectionFactory).getHttpConfiguration();
+                  HttpConfiguration httpConfiguration = ((HttpConnectionFactory) connectionFactory)
+                          .getHttpConfiguration();
                   httpConfiguration.setSendServerVersion(false);
                }
             }
@@ -136,9 +139,9 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
 
    private void addHttpsConnector(final Server server) {
       SslContextFactory sslContextFactory = new SslContextFactory();
-      sslContextFactory.setKeyStorePassword("secret");
-      sslContextFactory.setKeyManagerPassword("password");
-      sslContextFactory.setKeyStorePath(WebAppConfig.class.getResource("/sample.jks").toExternalForm());
+      sslContextFactory.setKeyStorePassword("topsecret");
+      sslContextFactory.setKeyManagerPassword("topsecret");
+      sslContextFactory.setKeyStorePath(WebAppConfig.class.getResource("/keystore.jks").toExternalForm());
       sslContextFactory.setKeyStoreType("JKS");
       sslContextFactory.setNeedClientAuth(false);
 

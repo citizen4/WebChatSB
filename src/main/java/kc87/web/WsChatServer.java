@@ -56,10 +56,15 @@ public class WsChatServer implements ApplicationContextAware {
    private Session thisSession = null;
    private HttpSession httpSession = null;
    private long lastActivityTime = 0;
+   private int chatSessionTimeout = WS_SESSION_TIMEOUT_SEC;
    private int defaultSessionTimeout = 0;
    private final BiConsumer<String, String> callback = this::sessionDestroyed;
    private boolean isHttpSessionValid = false;
    private String httpSessionId = null;
+
+   public void setChatSessionTimeout(final int timeout) {
+      chatSessionTimeout = timeout;
+   }
 
    @PostConstruct
    private void init() {
@@ -240,7 +245,7 @@ public class WsChatServer implements ApplicationContextAware {
 
 
    private void sendPong() {
-      if (System.currentTimeMillis() - lastActivityTime > WS_SESSION_TIMEOUT_SEC * 1000) {
+      if (System.currentTimeMillis() - lastActivityTime > chatSessionTimeout * 1000) {
          httpSession.invalidate();
          return;
       }
