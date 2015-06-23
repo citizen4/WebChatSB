@@ -2,7 +2,7 @@ package kc87.config;
 
 import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoClientURI;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDbFactory;
@@ -19,14 +19,14 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @SuppressWarnings("unused")
 public class PersistenceMongoConfig {
 
-   @Value("${webchat.mongodb.url}")
-   private String connectionUrl;
+   @Autowired
+   WebChatProperties webChatProperties;
 
    @Bean
    public MongoDbFactory mongoDbFactory() throws Exception {
       MongoClientOptions.Builder builder = new MongoClientOptions.Builder();
       builder.connectTimeout(1000);
-      MongoClientURI mongoClientURI = new MongoClientURI(connectionUrl, builder);
+      MongoClientURI mongoClientURI = new MongoClientURI(webChatProperties.getMongodbUrl(), builder);
       return new SimpleMongoDbFactory(mongoClientURI);
    }
 

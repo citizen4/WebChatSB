@@ -1,5 +1,6 @@
 package kc87.service;
 
+import kc87.config.WebChatProperties;
 import kc87.domain.Account;
 import kc87.repository.generic.AccountRepository;
 import kc87.service.crypto.ScryptPasswordEncoder;
@@ -35,8 +36,8 @@ public class DefaultAccountService implements AccountService {
    private static final Logger LOG = LogManager.getLogger(DefaultAccountService.class);
    private static final PasswordEncoder PASSWORD_ENCODER = new ScryptPasswordEncoder();
 
-   @Value("${webchat.db.test_accounts}")
-   private String testAccountsSource;
+   @Autowired
+   WebChatProperties webChatProperties;
 
    @Autowired
    private AccountRepository accountRepository;
@@ -90,7 +91,16 @@ public class DefaultAccountService implements AccountService {
       return prepareAccount(newAccount, formBean.getPassword());
    }
 
-   public Account prepareAccount(final Account account, final String password) {
+   public Account prepareAccount(final Account account, String password) {
+      try {
+         account.setFirstName(account.getFirstName().trim());
+         account.setLastName(account.getLastName().trim());
+         account.setEmail(account.getEmail().trim());
+         account.setUsername(account.getUsername().trim());
+      }catch (NullPointerException e){
+         /*Catch potential null pointers caused by trim()*/
+      }
+
       account.setCreated(new Date().getTime());
       account.setPassword(PASSWORD_ENCODER.encode(password));
       account.setRoles(account.getRoles() == null ? "USER" : account.getRoles());
@@ -98,7 +108,7 @@ public class DefaultAccountService implements AccountService {
    }
 
    private void createTestAccounts() {
-      Resource accountResource = new ClassPathResource(testAccountsSource);
+      Resource accountResource = new ClassPathResource(webChatProperties.getDbTestAccounts());
       Jackson2ResourceReader resourceReader = new Jackson2ResourceReader();
       try {
          Object accounts = resourceReader.readFrom(accountResource, this.getClass().getClassLoader());

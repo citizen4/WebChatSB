@@ -31,6 +31,14 @@
     color: #fff;
 }
 
+#loginForm label::before {
+    color: #f66;
+    font-size: 80%;
+    vertical-align: top;
+    content: "*";
+}
+
+
 #loginForm input:not([type=submit]) {
     margin: 0 15px 0 0;
     padding: 0 5px;

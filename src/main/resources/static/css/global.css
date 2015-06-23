@@ -25,6 +25,19 @@ body {
 
 
 
+
+footer {
+    position: absolute;
+    width: 100%;
+    bottom: 5px;
+    color: #444;
+    font-size: 16px;
+    font-family: sans;
+    font-weight: bold;
+    text-align: center;
+}
+
+
 .ErrMsg {
     position: relative;
     display: inline-block;

@@ -8,18 +8,22 @@
     <link rel="stylesheet" th:href="@{/css/error.css}" href="/css/error.css"/>
 </head>
 <body>
-<div th:replace="fragments/header :: #top-state"></div>
+<header id="top-state">
+    <div class="AccountBox">
+        <a class="HeaderBtn SignInUpBtn" href="/">Home</a>
+    </div>
+</header>
 <div id="container">
-    <h1>Ooooops...</h1>
+    <h1>WebChat says:</h1>
 
     <div th:if="${param.reason == null}">
-        <p th:text="'Error: ' + ${error}"></p>
-        <p th:text="'Status: ' + ${status}"></p>
-        <p th:text="'Message: ' + ${message}"></p>
+        <p class="StatusError" th:text="${status +' '+ error}"></p>
+        <p class="Message" th:text="'Message: ' + ${message}"></p>
     </div>
     <div th:if="${param.reason != null}">
-        <p th:if="${param.reason[0] == 'chat_open'}" th:text="'Only one chat window allowed!'"></p>
+        <p class="StatusError" th:if="${param.reason[0] == 'chat_open'}" th:text="'Only one chat window allowed!'"></p>
     </div>
 </div>
+<div th:replace="fragments/footer :: #footer"></div>
 </body>
 </html>

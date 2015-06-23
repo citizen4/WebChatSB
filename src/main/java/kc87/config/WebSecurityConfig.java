@@ -35,8 +35,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
    private static final Logger LOG = LogManager.getLogger(WebSecurityConfig.class);
    private static final GrantedAuthority ADMIN_AUTHORITY = new SimpleGrantedAuthority("ROLE_ADMIN");
 
-   @Value("${webchat.session.cookiename}")
-   private String cookieName;
+   @Autowired
+   WebChatProperties webChatProperties;
 
    @Autowired
    AccountService accountService;
@@ -81,11 +81,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       http.logout()
               .logoutUrl("/logout")
               .logoutSuccessUrl("/login?logout")
-              .deleteCookies(cookieName)
+              .deleteCookies(webChatProperties.getSessionCookieName())
               .invalidateHttpSession(true);
 
       http.httpBasic().disable();
       http.csrf().disable();
+
+      if(webChatProperties.isHttpForceTls()) {
+         http.requiresChannel().anyRequest().requiresSecure();
+         http.portMapper().http(webChatProperties.getHttpPort()).mapsTo(webChatProperties.getHttpsPort());
+      }
 
       http.exceptionHandling().accessDeniedHandler(this::handleServiceAccess);
       http.exceptionHandling().authenticationEntryPoint(this::handleServiceAccess);

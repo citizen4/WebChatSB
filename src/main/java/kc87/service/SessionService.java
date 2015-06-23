@@ -19,14 +19,16 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiConsumer;
 
 @Service
 @SuppressWarnings("unused")
 public class SessionService implements ApplicationListener<ApplicationEvent> {
    private static final Logger LOG = LogManager.getLogger(SessionService.class);
-   private static List<BiConsumer<String, String>> callbacks = new LinkedList<>();
-   private static Map<String, HttpSession> sessionList = new HashMap<>(128);
+   private static List<BiConsumer<String, String>> callbacks = new CopyOnWriteArrayList<>();
+   private static Map<String, HttpSession> sessionList = new ConcurrentHashMap<>(128);
 
    @Autowired
    private SessionRegistry sessionRegistry;

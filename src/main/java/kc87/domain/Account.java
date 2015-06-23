@@ -29,7 +29,6 @@ public class Account implements Serializable {
 
    @NotNull
    @Size(min = 2, max = 32, message = "{error.wrong_length}")
-   //@Size(min = 2, max = 32)
    @SafeHtml(message = "{error.unsafe_content}")
    private String firstName;
 
@@ -48,6 +47,7 @@ public class Account implements Serializable {
    private String username;
 
    @NotNull
+   @Size(min = 6, max = 255, message = "{error.wrong_length}")
    private String password;
 
    @NotNull

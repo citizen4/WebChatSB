@@ -3,6 +3,7 @@ package kc87.config;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.hibernate.jpa.HibernatePersistenceProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,14 +23,14 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public class PersistenceJpaConfig {
 
-   @Value("${webchat.jdbc.url}")
-   private String connectionUrl;
+   @Autowired
+   WebChatProperties webChatProperties;
 
    @Bean
    public DataSource dataSource() {
       HikariConfig config = new HikariConfig();
       config.setDriverClassName("org.hsqldb.jdbcDriver");
-      config.setJdbcUrl(connectionUrl);
+      config.setJdbcUrl(webChatProperties.getJdbcUrl());
       config.setUsername("sa");
       config.setPassword("");
 

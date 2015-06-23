@@ -22,6 +22,7 @@ import javax.servlet.http.HttpSession;
 import javax.websocket.CloseReason;
 import javax.websocket.HandshakeResponse;
 import javax.websocket.OnClose;
+import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
@@ -52,11 +53,11 @@ public class WsChatServer implements ApplicationContextAware {
    private static ApplicationContext appContext = null;
    private static SessionService sessionService = null;
    private static ChatLogRepository chatLogRepository = null;
+   private static int chatSessionTimeout = WS_SESSION_TIMEOUT_SEC;
    private UsernamePasswordAuthenticationToken authToken = null;
    private Session thisSession = null;
    private HttpSession httpSession = null;
    private long lastActivityTime = 0;
-   private int chatSessionTimeout = WS_SESSION_TIMEOUT_SEC;
    private int defaultSessionTimeout = 0;
    private final BiConsumer<String, String> callback = this::sessionDestroyed;
    private boolean isHttpSessionValid = false;
@@ -75,7 +76,7 @@ public class WsChatServer implements ApplicationContextAware {
 
    @OnOpen
    public void onOpen(Session session) {
-      LOG.debug("onOpen(): " + session.getId());
+      LOG.debug("@OnOpen: " + session.getId());
       thisSession = session;
 
       if (thisSession.getUserPrincipal() != null) {
@@ -119,19 +120,23 @@ public class WsChatServer implements ApplicationContextAware {
          }
 
       } catch (JsonSyntaxException e) {
-         LOG.error(e);
+         LOG.error("@OnMessage: "+e);
       }
    }
 
    @OnClose
    public void onClose() {
-      LOG.debug("onClose(): " + thisSession.getId());
+      LOG.debug("@OnClose: " + thisSession.getId());
       if (isHttpSessionValid) {
          httpSession.removeAttribute("CHAT_OPEN");
       }
       unjoinChat();
    }
 
+   @OnError
+   public void onError(Throwable throwable) {
+      LOG.error("@OnError: "+throwable);
+   }
 
    @Override
    public void setApplicationContext(ApplicationContext ctx) throws BeansException {

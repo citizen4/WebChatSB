@@ -60,6 +60,7 @@
     <span class="SuccessMsg" data-ng-show="footerMsg.success">{{footerMsg.success}}</span>
     <span class="ErrorMsg" data-ng-show="footerMsg.error">{{footerMsg.error}}</span>
 </div>
+<div th:replace="fragments/footer :: #footer"></div>
 <script src="/js/angular.min.js"></script>
 <script src="/js/angular-hal.js"></script>
 <script src="/js/dashboard.js"></script>
