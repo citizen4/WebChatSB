@@ -2,6 +2,8 @@ package kc87.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,32 +17,27 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
-@Configuration
-@EnableJpaRepositories(basePackages = {
-        "kc87.repository.jpa"
-        //,"kc87.repository.generic"
-}, enableDefaultTransactions = true)
-@SuppressWarnings("unused")
+
 public class PersistenceJpaConfig {
 
-   @Autowired
    WebChatProperties webChatProperties;
 
-   @Bean
+   public PersistenceJpaConfig(final WebChatProperties properties) {
+      webChatProperties = properties;
+   }
+
    public DataSource dataSource() {
       HikariConfig config = new HikariConfig();
       config.setDriverClassName("org.hsqldb.jdbcDriver");
       config.setJdbcUrl(webChatProperties.getJdbcUrl());
       config.setUsername("sa");
       config.setPassword("");
-
       HikariDataSource dataSource = new HikariDataSource(config);
       dataSource.setMaximumPoolSize(50);
       return dataSource;
    }
 
-   @Bean
-   public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+   public LocalContainerEntityManagerFactoryBean entityManagerFactory(final DataSource dataSource) {
       LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
       Map<String, Object> jpaProperties = new HashMap<>();
 
@@ -50,7 +47,7 @@ public class PersistenceJpaConfig {
       jpaProperties.put("hibernate.format_sql", true);
 
       factoryBean.setPersistenceProviderClass(HibernatePersistenceProvider.class);
-      factoryBean.setDataSource(dataSource());
+      factoryBean.setDataSource(dataSource);
       factoryBean.setPackagesToScan("kc87.domain");
       factoryBean.setJpaPropertyMap(jpaProperties);
       factoryBean.setValidationMode(ValidationMode.NONE);

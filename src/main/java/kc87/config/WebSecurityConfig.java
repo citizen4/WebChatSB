@@ -5,25 +5,20 @@ import kc87.service.crypto.ScryptPasswordEncoder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
-import org.springframework.security.web.DefaultRedirectStrategy;
-import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -33,7 +28,6 @@ import java.io.IOException;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
    private static final Logger LOG = LogManager.getLogger(WebSecurityConfig.class);
-   private static final GrantedAuthority ADMIN_AUTHORITY = new SimpleGrantedAuthority("ROLE_ADMIN");
 
    @Autowired
    WebChatProperties webChatProperties;
@@ -44,6 +38,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
    @Bean
    public SessionRegistry sessionRegistry() {
       return new SessionRegistryImpl();
+   }
+
+   @Bean(name = "authenticationManager")
+   public AuthenticationManager authManager() throws Exception {
+      return super.authenticationManagerBean();
    }
 
    @Override
@@ -66,18 +65,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
               .maxSessionsPreventsLogin(false)
               .expiredUrl("/login?expired")
               .sessionRegistry(sessionRegistry());
-      http.formLogin()
-              .loginPage("/login")
-              .failureUrl("/login?error")
-              .successHandler((request, response, authentication) -> {
-                 String successUrl = "/chat";
-                 RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
-                 if (authentication.getAuthorities().contains(ADMIN_AUTHORITY)) {
-                    successUrl = "/intern";
-                 }
-                 redirectStrategy.sendRedirect(request, response, successUrl);
-              });
-      //.defaultSuccessUrl("/chat");
+      //http.formLogin().loginPage("/login").loginProcessingUrl("/login");
       http.logout()
               .logoutUrl("/logout")
               .logoutSuccessUrl("/login?logout")
@@ -106,6 +94,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
    private void handleServiceAccess(HttpServletRequest request, HttpServletResponse response,
                                     final RuntimeException accessException) throws IOException {
       RequestMatcher serviceMatcher = new AntPathRequestMatcher("/service/**");
+
       LOG.debug("handleServiceAccess: " + accessException.toString());
 
       int httpResponseStatus = (accessException instanceof AccessDeniedException) ?
@@ -119,5 +108,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
          response.sendError(httpResponseStatus);
       }
    }
-
 }

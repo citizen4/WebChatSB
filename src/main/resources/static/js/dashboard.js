@@ -2,12 +2,13 @@ var dashboardApp = angular.module('dashboardApp', ['angular-hal']);
 
 dashboardApp.controller('DashboardCtrl', function ($log, $timeout, $scope) {
 
-   $scope.footerMsg = {msg: null, success: null, error: null, promise: null};
+   $scope.footerMsg = {msg:null,success:null,error:null,errors:null,promise:null};
 
    $scope.showFooterMsg = function (m) {
       $scope.footerMsg.msg = m.msg || null;
       $scope.footerMsg.success = m.success || null;
       $scope.footerMsg.error = m.error || null;
+      $scope.footerMsg.errors = m.errors || null;
 
       if ($scope.footerMsg.promise) {
          $timeout.cancel($scope.footerMsg.promise);
@@ -19,8 +20,8 @@ dashboardApp.controller('DashboardCtrl', function ($log, $timeout, $scope) {
       }
 
       $scope.footerMsg.promise = $timeout(function () {
-         $scope.footerMsg = {msg: null, success: null, error: null, promise: null};
-      }, $scope.footerMsg.error ? 6000 : 2000, true);
+         $scope.footerMsg = {msg:null,success:null,error:null,errors:null,promise:null};
+      }, $scope.footerMsg.error ? 8000 : 2000, true);
    }
 
 });
@@ -32,11 +33,12 @@ dashboardApp.controller('AccountCtrl', function ($log, $window, $filter, $timeou
 
    function showErrorMsg(action,error) {
       var errMsg = action + ": FAILED! " + error.status + " " + error.statusText;
+      var errors = null;
       if (error.data && error.data.errors) {
-         errMsg += "\n" + JSON.stringify(error.data.errors);
+         errors = error.data.errors;
       }
       console.error(errMsg);
-      $scope.showFooterMsg({error: errMsg});
+      $scope.showFooterMsg({error: errMsg, errors: errors});
    }
 
    function accountPage(pageNumber) {

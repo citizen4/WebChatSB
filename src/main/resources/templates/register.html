@@ -13,7 +13,11 @@
 <div id="formContainer">
     <h1>Please Sign Up</h1>
 
+
+
     <form id="signUpForm" action="#" th:object="${registerFormBean}" method="post" th:action="@{/register}">
+
+        <p class="FormFieldErrMsg" th:if="${#fields.hasErrors('global')}" th:errors="*{global}">Global Error!</p>
 
         <div>
             <p class="FormFieldErrMsg"  th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></p>

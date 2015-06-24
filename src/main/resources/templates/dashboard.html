@@ -55,10 +55,15 @@
         <button data-ng-click="createAccount(account)">CREATE</button>
     </div>
 </div>
+<div class="ErrorMsgList" data-ng-show="footerMsg.error">
+    <span>{{footerMsg.error}}</span>
+    <ul data-ng-show="footerMsg.errors">
+        <li data-ng-repeat="error in footerMsg.errors">Value '{{error.invalidValue}}': {{error.message}}</li>
+    </ul>
+</div>
 <div class="FooterMsg">
     <span data-ng-show="footerMsg.msg">{{footerMsg.msg}}</span>
     <span class="SuccessMsg" data-ng-show="footerMsg.success">{{footerMsg.success}}</span>
-    <span class="ErrorMsg" data-ng-show="footerMsg.error">{{footerMsg.error}}</span>
 </div>
 <div th:replace="fragments/footer :: #footer"></div>
 <script src="/js/angular.min.js"></script>

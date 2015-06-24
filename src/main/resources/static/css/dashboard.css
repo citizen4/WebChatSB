@@ -65,7 +65,7 @@ td.FixedColumn {
     padding: 2px;
     font-size: 16px;
     border: none;
-    background-color: transparent;
+    background-color: #ccc;
     min-width: 100%;
     overflow:  hidden;
     text-overflow: ellipsis;
@@ -93,6 +93,29 @@ td.FixedColumn {
     font-weight: bold;
 }
 
+
+.ErrorMsgList {
+    position: relative;
+    display: table;
+    color: #f00;
+    margin: 20px auto;
+    padding: 10px 10px 10px 25px;
+    border: 1px solid #f00;
+    background-color: rgba(0,0,0,0.7);
+}
+
+.ErrorMsgList span {
+    display: inline-block;
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.ErrorMsgList li {
+    list-style-type: disc;
+    margin-bottom: 4px;
+}
+
 .FooterMsg {
     position: absolute;
     bottom: 0;
@@ -104,8 +127,4 @@ td.FixedColumn {
 
 .SuccessMsg {
     color: #0f0;
-}
-
-.ErrorMsg {
-    color: #f22;
 }

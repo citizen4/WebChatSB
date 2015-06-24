@@ -2,6 +2,8 @@ package kc87.config;
 
 import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoClientURI;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,18 +13,15 @@ import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 
-@Configuration
-@EnableMongoRepositories(basePackages = {
-        "kc87.repository.mongo"
-        , "kc87.repository.generic"
-})
-@SuppressWarnings("unused")
+
 public class PersistenceMongoConfig {
 
-   @Autowired
    WebChatProperties webChatProperties;
 
-   @Bean
+   public PersistenceMongoConfig(final WebChatProperties properties) {
+      webChatProperties = properties;
+   }
+
    public MongoDbFactory mongoDbFactory() throws Exception {
       MongoClientOptions.Builder builder = new MongoClientOptions.Builder();
       builder.connectTimeout(1000);
@@ -30,8 +29,7 @@ public class PersistenceMongoConfig {
       return new SimpleMongoDbFactory(mongoClientURI);
    }
 
-   @Bean
-   public MongoTemplate mongoTemplate() throws Exception {
-      return new MongoTemplate(mongoDbFactory());
+   public MongoTemplate mongoTemplate(final MongoDbFactory mongoDbFactory) throws Exception {
+      return new MongoTemplate(mongoDbFactory);
    }
 }

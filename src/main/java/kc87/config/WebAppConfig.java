@@ -91,7 +91,6 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
    public void addViewControllers(ViewControllerRegistry registry) {
       registry.addViewController("/").setViewName("index");
       registry.addViewController("/index.*").setViewName("index");
-      registry.addViewController("/login").setViewName("login");
       registry.addViewController("/chat").setViewName("chat");
       registry.addViewController("/intern").setViewName("dashboard");
    }
@@ -101,12 +100,11 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
    public EmbeddedServletContainerFactory servletContainer() {
       JettyEmbeddedServletContainerFactory factory = new JettyEmbeddedServletContainerFactory();
 
-      LOG.debug(webChatProperties.getKeystoreFile());
-
       factory.setSessionTimeout(webChatProperties.getSessionTimeout(), TimeUnit.SECONDS);
 
       factory.addInitializers(servletContext -> {
          servletContext.setSessionTrackingModes(EnumSet.of(SessionTrackingMode.COOKIE));
+         //servletContext.setSessionTrackingModes(EnumSet.of(SessionTrackingMode.URL));
          servletContext.getSessionCookieConfig().setName(webChatProperties.getSessionCookieName());
       });
 
