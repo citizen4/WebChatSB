@@ -19,6 +19,7 @@ import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -75,7 +76,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       http.httpBasic().disable();
       http.csrf().disable();
 
-      if(webChatProperties.isHttpForceTls()) {
+      if (webChatProperties.isHttpForceTls()) {
          http.requiresChannel().anyRequest().requiresSecure();
          http.portMapper().http(webChatProperties.getHttpPort()).mapsTo(webChatProperties.getHttpsPort());
       }

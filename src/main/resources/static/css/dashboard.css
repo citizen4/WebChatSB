@@ -15,7 +15,7 @@
     position: relative;
     margin: 0 auto;
     top: 30px;
-    height: 182px;
+    height: 186px;
     width:  1024px;
     background-color: #959;
     border: 1px solid #aaa;
@@ -53,6 +53,7 @@
     word-break: keep-all;
     white-space: nowrap;
     max-width: 170px;
+    cursor: default;
 }
 
 td.FixedColumn {
@@ -67,10 +68,25 @@ td.FixedColumn {
     border: none;
     background-color: #ccc;
     min-width: 100%;
+    height: 20px;
     overflow:  hidden;
     text-overflow: ellipsis;
+    cursor: text;
 }
 
+.AccountTable td:last-child {
+    padding: 0 0 0 3px;
+}
+
+.AccountTable td:last-child button {
+    font-size: 16px;
+    width: 30px;
+    cursor: default;
+    color: #000;
+    background-color: #f00;
+    background: linear-gradient(to bottom, #fe8844 0%, #ff0000 50%, #ea3307 51%, #aa0000 100%);
+    border: 1px  outset #f00;
+}
 
 .AccountTable td input:focus {
     border: 1px solid #f00;
@@ -98,7 +114,7 @@ td.FixedColumn {
     position: relative;
     display: table;
     color: #f00;
-    margin: 20px auto;
+    margin: 30px auto;
     padding: 10px 10px 10px 25px;
     border: 1px solid #f00;
     background-color: rgba(0,0,0,0.7);

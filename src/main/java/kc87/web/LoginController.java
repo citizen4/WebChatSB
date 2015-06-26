@@ -63,7 +63,7 @@ public class LoginController {
                  formBean.getPassword());
          Authentication authResult = authenticationManager.authenticate(authRequest);
          SecurityContextHolder.getContext().setAuthentication(authResult);
-         sessionRegistry.registerNewSession(request.getSession().getId(),authResult.getPrincipal());
+         sessionRegistry.registerNewSession(request.getSession().getId(), authResult.getPrincipal());
          //sessionRegistry.registerNewSession(request.changeSessionId(),authResult.getPrincipal());
          Cookie removeCookie = new Cookie("Enabled", "true");
          removeCookie.setMaxAge(0);

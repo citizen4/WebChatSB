@@ -4,18 +4,25 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %highlight{%-5level %logger{1.} - %msg%n}"/>
         </Console>
+        <File name="File" fileName="/tmp/webchat.log">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %logger{1.} - %msg%n"/>
+        </File>
     </Appenders>
     <Loggers>
-        <Root level="INFO">
+        <Root level="OFF">
             <AppenderRef ref="Console"/>
         </Root>
-        <logger name="kc87" level="DEBUG"/>
-        <logger name="org.thymeleaf" level="WARN"/>
-        <logger name="org.springframework.boot.autoconfigure.security" level="INFO" />
-        <logger name="org.springframework.security.core.session" level="DEBUG" />
-        <!--<logger name="org.springframework.transaction" level="INFO" />-->
-        <!--<logger name="org.springframework.data.mongodb.core" level="INFO" />-->
-        <!--<logger name="org.springframework.data" level="DEBUG" />-->
-        <!--<logger name="org.springframework" level="INFO" />-->
+        <logger name="kc87" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File">
+                <ThresholdFilter level="warn"  onMatch="ACCEPT" onMismatch="DENY"/>
+            </AppenderRef>
+        </logger>
+        <logger name="org" level="INFO" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File">
+                <ThresholdFilter level="warn"  onMatch="ACCEPT" onMismatch="DENY"/>
+            </AppenderRef>
+        </logger>
     </Loggers>
 </Configuration>

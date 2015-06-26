@@ -4,7 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(value = "webchat",ignoreUnknownFields = false)
+@ConfigurationProperties(value = "webchat", ignoreUnknownFields = false)
 public class WebChatProperties {
 
    private boolean httpLogging;

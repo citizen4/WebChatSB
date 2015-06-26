@@ -1,5 +1,7 @@
 package kc87.config;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,16 +11,21 @@ import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+
 import javax.sql.DataSource;
 
 
 @Configuration
 public class PersistenceConfig {
+   private static final Logger LOG = LogManager.getLogger(PersistenceConfig.class);
+
 
    @Profile("generic_mongo")
    @Configuration
    @EnableJpaRepositories(basePackages = {"kc87.repository.jpa"}, enableDefaultTransactions = true)
    public static class JpaConfig {
+      private static final Logger LOG = LogManager.getLogger(PersistenceConfig.class);
+
       @Autowired
       WebChatProperties webChatProperties;
 

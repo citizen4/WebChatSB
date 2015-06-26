@@ -9,7 +9,6 @@ import kc87.web.RegisterFormBean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.repository.init.Jackson2ResourceReader;
@@ -97,7 +96,7 @@ public class DefaultAccountService implements AccountService {
          account.setLastName(account.getLastName().trim());
          account.setEmail(account.getEmail().trim());
          account.setUsername(account.getUsername().trim());
-      }catch (NullPointerException e){
+      } catch (NullPointerException e) {
          /*Catch potential null pointers caused by trim()*/
       }
 

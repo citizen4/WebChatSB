@@ -40,7 +40,7 @@ public class AccountValidator extends SpringValidatorAdapter {
       if (!errors.hasErrors()) {
          Account dbAccount = accountRepository.findByUsernameIgnoreCase(account.getUsername());
          if (dbAccount != null && !dbAccount.getId().equals(account.getId())) {
-            LOG.warn("Reject: " + account.toString());
+            LOG.debug("Reject: " + account.toString());
             errors.rejectValue("username", "error.username_taken", "Username already taken!");
          }
       }

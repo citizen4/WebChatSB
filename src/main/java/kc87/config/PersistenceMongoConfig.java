@@ -2,16 +2,9 @@ package kc87.config;
 
 import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoClientURI;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
-
 
 
 public class PersistenceMongoConfig {

@@ -1,9 +1,7 @@
 /* global angular */
 
-angular.module('angular-hal', [])
+angular.module('angular-hal', []).service('halClient', ['$http', '$q', '$window',
 
-.service('halClient', [
-    '$http', '$q', '$window',
     function ($http, $q, $window) {
 
         var UriTemplate = $window.uriTemplate.template;
@@ -24,7 +22,7 @@ angular.module('angular-hal', [])
             return callService('PATCH', href, options, data);
         }; //patch
 
-        this.$del = function (href, options) {
+        this.$delete = function (href, options) {
             return callService('DELETE', href, options);
         }; //del
 
@@ -62,7 +60,7 @@ angular.module('angular-hal', [])
                 var link = links[rel];
                 return callLink('PATCH', link, params, data);
             });
-            defineHiddenProperty(this, '$del', function (rel, params) {
+            defineHiddenProperty(this, '$delete', function (rel, params) {
                 var link = links[rel];
                 return callLink('DELETE', link, params);
             });
@@ -78,8 +76,6 @@ angular.module('angular-hal', [])
                     Object.defineProperty(this, key, {
                         configurable: false,
                         enumerable: true,
-                        //XXX default == false ??
-                        //writable: true,
                         value: data[key]
                     });
                 }, this);

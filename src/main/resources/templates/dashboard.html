@@ -32,14 +32,19 @@
                 <td title="{{account.email}}"><input data-ng-model="account.email" data-ng-focus="editorHandler($event,$index)" data-ng-blur="editorHandler($event,$index)"/></td>
                 <td>{{account.roles}}</td>
                 <td>{{account.created | date: 'dd.MM.yy HH:mm:ss.sss'}}</td>
+                <td><button title="{{'Delete ' + account.username}}" data-ng-click="deleteHandler($event,$index)">&#x232b;</button></td>
                 <!--<td class="FixedColumn" title="{{account.id}}">{{account.id}}</td>-->
             </tr>
             </tbody>
         </table>
     </div>
     <div>
-        <span>Page {{page.number + 1}} of {{page.totalPages}}</span>
-        <button data-ng-click="loadAccountPage(page.number + 1)">NEXT</button>
+        <button data-ng-disabled="page.number == 0" data-ng-click="loadAccountPage(0)">FIRST</button>
+        <button data-ng-disabled="page.number == 0" data-ng-click="loadAccountPage(page.number - 1)">PREV</button>
+        <span>{{page.number + 1}} / {{page.totalPages}}</span>
+        <button data-ng-disabled="(page.number+1) >= page.totalPages" data-ng-click="loadAccountPage(page.number + 1)">NEXT</button>
+        <button data-ng-disabled="(page.number+1) >= page.totalPages" data-ng-click="loadAccountPage(page.totalPages - 1)">LAST</button>
+
     </div>
     <div>
         <label>Username:</label>
@@ -52,7 +57,7 @@
         <input type="text" data-ng-model="account.lastName"/>
         <input type="text" data-ng-model="account.email"/>
         <input type="password" data-ng-model="account.password"/>
-        <button data-ng-click="createAccount(account)">CREATE</button>
+        <button data-ng-click="createHandler(account)">CREATE</button>
     </div>
 </div>
 <div class="ErrorMsgList" data-ng-show="footerMsg.error">

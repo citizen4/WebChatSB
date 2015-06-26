@@ -120,7 +120,7 @@ public class WsChatServer implements ApplicationContextAware {
          }
 
       } catch (JsonSyntaxException e) {
-         LOG.error("@OnMessage: "+e);
+         LOG.error("@OnMessage: " + e);
       }
    }
 
@@ -135,7 +135,7 @@ public class WsChatServer implements ApplicationContextAware {
 
    @OnError
    public void onError(Throwable throwable) {
-      LOG.error("@OnError: "+throwable);
+      LOG.error("@OnError: " + throwable);
    }
 
    @Override
